@@ -1,0 +1,136 @@
+import React from 'react';
+import { Card, CardContent } from '@/components/ui/card';
+import { Label } from '@/components/ui/label';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import { Brain, Calculator } from 'lucide-react';
+
+interface EpworthSectionProps {
+  formData: any;
+  updateField: (field: string, value: any) => void;
+  calculateEpworthTotal: () => number;
+}
+
+const epworthQuestions = [
+  { key: 'epworthLendo', label: '1. Sentado e LENDO' },
+  { key: 'epworthTV', label: '2. Sentado e vendo televisão (ou outra tela)' },
+  { key: 'epworthPublico', label: '3. Sentado em lugar público, sem atividades (ex: sala de espera, aulas / palestras, cinema, teatro, igreja, etc.)' },
+  { key: 'epworthTransporte', label: '4. Como passageiro de alguns transporte (carro, metrô, ônibus, etc.), andando por 1 hora sem parar' },
+  { key: 'epworthDescansando', label: '5. Deitado para descansar à tarde' },
+  { key: 'epworthConversando', label: '6. Sentado e conversando com alguém' },
+  { key: 'epworthAposRefeicao', label: '7. Sentado após uma refeição, sem álcool' },
+  { key: 'epworthDirigindo', label: '8. No carro, dirigindo, parado por alguns minutos, durante trânsito' },
+];
+
+const epworthOptions = [
+  { value: 0, label: 'Nenhuma(0)' },
+  { value: 1, label: 'Pequena(1)' },
+  { value: 2, label: 'Média(2)' },
+  { value: 3, label: 'Alta(3)' },
+];
+
+export const EpworthSection: React.FC<EpworthSectionProps> = ({
+  formData,
+  updateField,
+  calculateEpworthTotal,
+}) => {
+  const total = calculateEpworthTotal();
+  
+  const getScoreInterpretation = (score: number) => {
+    if (score <= 5) return { text: 'Normal', color: 'text-green-600' };
+    if (score <= 10) return { text: 'Sonolência leve', color: 'text-yellow-600' };
+    if (score <= 15) return { text: 'Sonolência moderada', color: 'text-orange-600' };
+    return { text: 'Sonolência severa', color: 'text-red-600' };
+  };
+
+  const interpretation = getScoreInterpretation(total);
+
+  return (
+    <div className="space-y-6">
+      <Card className="border-purple-200 bg-purple-50">
+        <CardContent className="p-6">
+          <div className="flex items-center gap-2 mb-4">
+            <Brain className="h-5 w-5 text-purple-600" />
+            <h3 className="font-semibold text-purple-900">Escala de Sonolência de Epworth</h3>
+          </div>
+          <p className="text-purple-800 text-sm">
+            Na últimas 4 semanas, qual possibilidade de você cochilar ou adormecer 
+            (mesmo que de modo muito breve) nas seguintes situações:
+          </p>
+        </CardContent>
+      </Card>
+
+      {/* Tabela de Perguntas */}
+      <Card>
+        <CardContent className="p-6">
+          <div className="overflow-x-auto">
+            <table className="w-full border-collapse">
+              <thead>
+                <tr className="border-b">
+                  <th className="text-left p-3 font-medium">Situação</th>
+                  <th className="text-center p-3 font-medium min-w-[80px]">Nenhuma<br/>(0)</th>
+                  <th className="text-center p-3 font-medium min-w-[80px]">Pequena<br/>(1)</th>
+                  <th className="text-center p-3 font-medium min-w-[80px]">Média<br/>(2)</th>
+                  <th className="text-center p-3 font-medium min-w-[80px]">Alta<br/>(3)</th>
+                </tr>
+              </thead>
+              <tbody>
+                {epworthQuestions.map((question) => (
+                  <tr key={question.key} className="border-b hover:bg-gray-50">
+                    <td className="p-3">
+                      <Label className="text-sm font-medium">
+                        {question.label}
+                      </Label>
+                    </td>
+                    {epworthOptions.map((option) => (
+                      <td key={option.value} className="text-center p-3">
+                        <RadioGroup
+                          value={formData[question.key]?.toString() || ''}
+                          onValueChange={(value) => updateField(question.key, parseInt(value))}
+                        >
+                          <RadioGroupItem 
+                            value={option.value.toString()} 
+                            id={`${question.key}-${option.value}`}
+                          />
+                        </RadioGroup>
+                      </td>
+                    ))}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Resultado */}
+      <Card className="border-green-200 bg-green-50">
+        <CardContent className="p-6">
+          <div className="flex items-center gap-2 mb-4">
+            <Calculator className="h-5 w-5 text-green-600" />
+            <h3 className="font-semibold text-green-900">Resultado da Escala</h3>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="text-center p-4 bg-white rounded-lg border">
+              <p className="text-sm text-gray-600 mb-2">Pontuação Total</p>
+              <p className="text-3xl font-bold text-blue-600">{total}</p>
+              <p className="text-sm text-gray-500">(máximo 24 pontos)</p>
+            </div>
+            
+            <div className="text-center p-4 bg-white rounded-lg border">
+              <p className="text-sm text-gray-600 mb-2">Interpretação</p>
+              <p className={`text-lg font-semibold ${interpretation.color}`}>
+                {interpretation.text}
+              </p>
+              <p className="text-sm text-gray-500 mt-1">
+                {total <= 5 ? 'Dentro do normal' : 
+                 total <= 10 ? 'Atenção recomendada' : 
+                 'Consulte um especialista'}
+              </p>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+    </div>
+  );
+};
