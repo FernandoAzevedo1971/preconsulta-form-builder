@@ -118,21 +118,6 @@ export const MedicalForm: React.FC = () => {
               </span>
             </div>
             <Progress value={progress} className="mb-4" />
-            
-            {/* Section Navigator */}
-            <div className="flex flex-wrap gap-2">
-              {sections.map((section, index) => (
-                <Button
-                  key={section.id}
-                  variant={index === currentSection ? "default" : "outline"}
-                  size="sm"
-                  onClick={() => goToSection(index)}
-                  className="text-xs"
-                >
-                  {section.title}
-                </Button>
-              ))}
-            </div>
           </CardContent>
         </Card>
 
