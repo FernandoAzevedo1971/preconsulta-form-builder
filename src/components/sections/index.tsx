@@ -2,6 +2,15 @@
 import React from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 
+interface SectionProps {
+  formData: any;
+  updateField: (field: string, value: any) => void;
+  updateArrayField?: (field: string, index: number, value: string) => void;
+  calculateAge?: (birthDate: string) => number;
+  calculateEpworthTotal?: () => number;
+  calculateCargaTabagica?: () => number;
+}
+
 const PlaceholderSection = ({ title }: { title: string }) => (
   <Card>
     <CardContent className="p-6">
@@ -11,13 +20,13 @@ const PlaceholderSection = ({ title }: { title: string }) => (
   </Card>
 );
 
-export const EndocrineSection = () => <PlaceholderSection title="Sistema Endócrino" />;
-export const OtherSystemsSection = () => <PlaceholderSection title="Outros Sistemas" />;
-export const AllergiesSection = () => <PlaceholderSection title="Alergias" />;
-export const MedicationsSection = () => <PlaceholderSection title="Medicações em Uso" />;
-export const SurgeriesSection = () => <PlaceholderSection title="Cirurgias Prévias" />;
-export const FamilyHistorySection = () => <PlaceholderSection title="História Familiar" />;
-export const PersonalHabitsSection = () => <PlaceholderSection title="Hábitos Pessoais" />;
-export const VaccinationsSection = () => <PlaceholderSection title="Histórico de Vacinações" />;
-export const ScreeningSection = () => <PlaceholderSection title="Outros Rastreamentos" />;
-export const DeclarationSection = () => <PlaceholderSection title="Declaração" />;
+export const EndocrineSection: React.FC<SectionProps> = () => <PlaceholderSection title="Sistema Endócrino" />;
+export const OtherSystemsSection: React.FC<SectionProps> = () => <PlaceholderSection title="Outros Sistemas" />;
+export const AllergiesSection: React.FC<SectionProps> = () => <PlaceholderSection title="Alergias" />;
+export const MedicationsSection: React.FC<SectionProps> = () => <PlaceholderSection title="Medicações em Uso" />;
+export const SurgeriesSection: React.FC<SectionProps> = () => <PlaceholderSection title="Cirurgias Prévias" />;
+export const FamilyHistorySection: React.FC<SectionProps> = () => <PlaceholderSection title="História Familiar" />;
+export const PersonalHabitsSection: React.FC<SectionProps> = () => <PlaceholderSection title="Hábitos Pessoais" />;
+export const VaccinationsSection: React.FC<SectionProps> = () => <PlaceholderSection title="Histórico de Vacinações" />;
+export const ScreeningSection: React.FC<SectionProps> = () => <PlaceholderSection title="Outros Rastreamentos" />;
+export const DeclarationSection: React.FC<SectionProps> = () => <PlaceholderSection title="Declaração" />;

@@ -12,16 +12,18 @@ import { RespiratorySection } from './sections/RespiratorySection';
 import { SleepSection } from './sections/SleepSection';
 import { EpworthSection } from './sections/EpworthSection';
 import { CardiovascularSection } from './sections/CardiovascularSection';
-import { EndocrineSection } from './sections/EndocrineSection';
-import { OtherSystemsSection } from './sections/OtherSystemsSection';
-import { AllergiesSection } from './sections/AllergiesSection';
-import { MedicationsSection } from './sections/MedicationsSection';
-import { SurgeriesSection } from './sections/SurgeriesSection';
-import { FamilyHistorySection } from './sections/FamilyHistorySection';
-import { PersonalHabitsSection } from './sections/PersonalHabitsSection';
-import { VaccinationsSection } from './sections/VaccinationsSection';
-import { ScreeningSection } from './sections/ScreeningSection';
-import { DeclarationSection } from './sections/DeclarationSection';
+import { 
+  EndocrineSection,
+  OtherSystemsSection,
+  AllergiesSection,
+  MedicationsSection,
+  SurgeriesSection,
+  FamilyHistorySection,
+  PersonalHabitsSection,
+  VaccinationsSection,
+  ScreeningSection,
+  DeclarationSection
+} from './sections';
 
 const sections = [
   { id: 'lgpd', title: 'Termo LGPD', component: LGPDSection },

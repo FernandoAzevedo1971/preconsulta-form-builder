@@ -5,6 +5,10 @@ import { Shield, Info } from 'lucide-react';
 interface LGPDSectionProps {
   formData: any;
   updateField: (field: string, value: any) => void;
+  updateArrayField?: (field: string, index: number, value: string) => void;
+  calculateAge?: (birthDate: string) => number;
+  calculateEpworthTotal?: () => number;
+  calculateCargaTabagica?: () => number;
 }
 
 export const LGPDSection: React.FC<LGPDSectionProps> = () => {

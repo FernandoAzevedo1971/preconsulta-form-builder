@@ -7,7 +7,10 @@ import { Brain, Calculator } from 'lucide-react';
 interface EpworthSectionProps {
   formData: any;
   updateField: (field: string, value: any) => void;
-  calculateEpworthTotal: () => number;
+  updateArrayField?: (field: string, index: number, value: string) => void;
+  calculateAge?: (birthDate: string) => number;
+  calculateEpworthTotal?: () => number;
+  calculateCargaTabagica?: () => number;
 }
 
 const epworthQuestions = [

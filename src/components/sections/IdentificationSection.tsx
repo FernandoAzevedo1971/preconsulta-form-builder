@@ -15,13 +15,16 @@ import { cn } from '@/lib/utils';
 interface IdentificationSectionProps {
   formData: any;
   updateField: (field: string, value: any) => void;
-  calculateAge: (birthDate: string) => number;
+  updateArrayField?: (field: string, index: number, value: string) => void;
+  calculateAge?: (birthDate: string) => number;
+  calculateEpworthTotal?: () => number;
+  calculateCargaTabagica?: () => number;
 }
 
-export const IdentificationSection: React.FC<IdentificationSectionProps> = ({
-  formData,
-  updateField,
-  calculateAge,
+export const IdentificationSection: React.FC<IdentificationSectionProps> = ({ 
+  formData, 
+  updateField, 
+  calculateAge 
 }) => {
   const handleDateChange = (date: Date | undefined, field: string) => {
     if (date) {

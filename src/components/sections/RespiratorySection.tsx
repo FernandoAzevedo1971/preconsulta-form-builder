@@ -8,6 +8,10 @@ import { Wind } from 'lucide-react';
 interface RespiratorySectionProps {
   formData: any;
   updateField: (field: string, value: any) => void;
+  updateArrayField?: (field: string, index: number, value: string) => void;
+  calculateAge?: (birthDate: string) => number;
+  calculateEpworthTotal?: () => number;
+  calculateCargaTabagica?: () => number;
 }
 
 const ConditionalTextarea: React.FC<{
