@@ -188,30 +188,21 @@ export const ContinuousMedicalForm: React.FC = () => {
 
         {/* Formulário Contínuo */}
         <Card ref={formRef} className="shadow-lg">
-          <CardContent className="p-8 space-y-8">
-            {/* LGPD */}
-            <div className="border-b pb-8">
-              <div className="flex items-start gap-3 mb-6">
-                <Shield className="h-6 w-6 text-blue-600 mt-1" />
-                <div>
-                  <h3 className="font-semibold text-blue-900 mb-3">
-                    Lei Geral de Proteção de Dados Pessoais (LGPD)
-                  </h3>
-                  <p className="text-blue-800 leading-relaxed">
-                    Este formulário está em conformidade com a Lei Geral de Proteção de Dados Pessoais 
-                    (Lei nº 13.709/2018). As informações coletadas serão tratadas de forma ética e responsável, 
-                    observando os princípios de transparência, segurança e respeito à privacidade.
-                  </p>
-                </div>
+          <CardContent className="p-8 space-y-6">
+            {/* LGPD Info */}
+            <div className="flex items-start gap-3 mb-8">
+              <Shield className="h-6 w-6 text-blue-600 mt-1" />
+              <div>
+                <h3 className="font-semibold text-blue-900 mb-3">
+                  Lei Geral de Proteção de Dados Pessoais (LGPD)
+                </h3>
+                <p className="text-blue-800 leading-relaxed text-sm">
+                  Este formulário está em conformidade com a Lei Geral de Proteção de Dados Pessoais 
+                  (Lei nº 13.709/2018). As informações coletadas serão tratadas de forma ética e responsável, 
+                  observando os princípios de transparência, segurança e respeito à privacidade.
+                </p>
               </div>
             </div>
-
-            {/* Identificação */}
-            <div className="border-b pb-8">
-              <div className="flex items-center gap-2 mb-6">
-                <User className="h-5 w-5 text-blue-600" />
-                <h3 className="font-semibold text-blue-900">Informações Pessoais</h3>
-              </div>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="md:col-span-2">
@@ -316,14 +307,9 @@ export const ContinuousMedicalForm: React.FC = () => {
                   />
                 </div>
               </div>
-            </div>
 
             {/* Sistema Respiratório */}
-            <div className="border-b pb-8">
-              <div className="flex items-center gap-2 mb-6">
-                <Wind className="h-5 w-5 text-blue-600" />
-                <h3 className="font-semibold text-blue-900">Sistema Respiratório</h3>
-              </div>
+            <div className="space-y-4">
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {[
@@ -368,11 +354,7 @@ export const ContinuousMedicalForm: React.FC = () => {
             </div>
 
             {/* Distúrbios do Sono */}
-            <div className="border-b pb-8">
-              <div className="flex items-center gap-2 mb-6">
-                <Moon className="h-5 w-5 text-purple-600" />
-                <h3 className="font-semibold text-purple-900">Distúrbios do Sono</h3>
-              </div>
+            <div className="space-y-4">
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {[
@@ -456,11 +438,7 @@ export const ContinuousMedicalForm: React.FC = () => {
             </div>
 
             {/* Escala de Epworth */}
-            <div className="border-b pb-8">
-              <div className="flex items-center gap-2 mb-6">
-                <Brain className="h-5 w-5 text-purple-600" />
-                <h3 className="font-semibold text-purple-900">Escala de Sonolência de Epworth</h3>
-              </div>
+            <div className="space-y-4">
               
               <p className="text-purple-800 text-sm mb-6">
                 Na últimas 4 semanas, qual possibilidade de você cochilar ou adormecer 
@@ -522,11 +500,7 @@ export const ContinuousMedicalForm: React.FC = () => {
             </div>
 
             {/* Sistema Cardiovascular */}
-            <div className="border-b pb-8">
-              <div className="flex items-center gap-2 mb-6">
-                <Heart className="h-5 w-5 text-red-600" />
-                <h3 className="font-semibold text-red-900">Sistema Cardiovascular</h3>
-              </div>
+            <div className="space-y-4">
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {[
@@ -569,7 +543,7 @@ export const ContinuousMedicalForm: React.FC = () => {
             </div>
 
             {/* Declaração */}
-            <div>
+            <div className="mt-8">
               <h3 className="font-semibold text-gray-900 mb-4">Declaração de Veracidade</h3>
               <div className="flex items-start space-x-3">
                 <Checkbox
