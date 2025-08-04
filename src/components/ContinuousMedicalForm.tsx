@@ -188,283 +188,607 @@ export const ContinuousMedicalForm: React.FC = () => {
 
         {/* Formulário Contínuo */}
         <Card ref={formRef} className="shadow-lg">
-          <CardContent className="p-8">
-            <div className="space-y-4">
-              
-              <p className="text-sm text-blue-800 leading-relaxed mb-6">
-                Este formulário está em conformidade com a Lei Geral de Proteção de Dados Pessoais 
-                (Lei nº 13.709/2018). As informações coletadas serão tratadas de forma ética e responsável.
-              </p>
+          <CardContent className="p-8 space-y-6">
+            
+            {/* LGPD Info */}
+            <p className="text-sm text-blue-800 leading-relaxed">
+              Este formulário está em conformidade com a Lei Geral de Proteção de Dados Pessoais 
+              (Lei nº 13.709/2018). As informações coletadas serão tratadas de forma ética e responsável.
+            </p>
 
+            {/* Nome Completo */}
+            <div>
+              <Label htmlFor="nomeCompleto" className="text-sm font-medium">
+                Nome Completo <span className="text-red-500">*</span>
+              </Label>
+              <Textarea
+                id="nomeCompleto"
+                value={formData.nomeCompleto}
+                onChange={(e) => updateField('nomeCompleto', e.target.value)}
+                placeholder="Digite seu nome completo"
+                className="mt-1"
+                rows={2}
+              />
+            </div>
+
+            {/* Data de Nascimento e Idade */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <Label htmlFor="nomeCompleto" className="text-sm font-medium">
-                  Nome Completo <span className="text-red-500">*</span>
+                <Label htmlFor="dataNascimento" className="text-sm font-medium">
+                  Data de Nascimento <span className="text-red-500">*</span>
                 </Label>
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <Button
+                      variant="outline"
+                      className={cn(
+                        "w-full justify-start text-left font-normal mt-1",
+                        !formData.dataNascimento && "text-muted-foreground"
+                      )}
+                    >
+                      <CalendarIcon className="mr-2 h-4 w-4" />
+                      {formData.dataNascimento ? (
+                        format(new Date(formData.dataNascimento), "dd/MM/yyyy")
+                      ) : (
+                        "Selecione a data"
+                      )}
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0" align="start">
+                    <CalendarComponent
+                      mode="single"
+                      selected={formData.dataNascimento ? new Date(formData.dataNascimento) : undefined}
+                      onSelect={(date) => {
+                        if (date) {
+                          const dateString = date.toISOString().split('T')[0];
+                          updateField('dataNascimento', dateString);
+                          const age = calculateAge(dateString);
+                          updateField('idade', age);
+                        }
+                      }}
+                      disabled={(date) => date > new Date() || date < new Date("1900-01-01")}
+                      initialFocus
+                    />
+                  </PopoverContent>
+                </Popover>
+              </div>
+
+              {formData.idade > 0 && (
+                <div>
+                  <Label className="text-sm font-medium">Idade Atual</Label>
+                  <div className="mt-1 p-3 bg-gray-50 rounded-md">
+                    <span className="text-lg font-semibold text-blue-600">
+                      {formData.idade} anos
+                    </span>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Indicação */}
+            <div>
+              <Label htmlFor="indicacao" className="text-sm font-medium">
+                Quem fez a indicação para o Dr. Fernando Azevedo?
+              </Label>
+              <RadioGroup
+                value={formData.indicacao}
+                onValueChange={(value) => updateField('indicacao', value)}
+                className="mt-2"
+              >
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="Outro médico" id="medico" />
+                  <Label htmlFor="medico">Outro médico</Label>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="Parente ou amigo" id="parente" />
+                  <Label htmlFor="parente">Parente ou amigo</Label>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="Outros" id="outros" />
+                  <Label htmlFor="outros">Outros</Label>
+                </div>
+              </RadioGroup>
+            </div>
+
+            {/* Quem Indicou */}
+            <div>
+              <Label htmlFor="quemIndicou" className="text-sm font-medium">
+                Cite por favor quem indicou:
+              </Label>
+              <Input
+                id="quemIndicou"
+                value={formData.quemIndicou}
+                onChange={(e) => updateField('quemIndicou', e.target.value)}
+                placeholder="Nome de quem fez a indicação"
+                className="mt-1"
+              />
+            </div>
+
+            {/* Asma / Bronquite */}
+            <div>
+              <Label className="text-sm font-medium">Asma / Bronquite</Label>
+              <RadioGroup
+                value={String(formData.asma || '')}
+                onValueChange={(value) => updateField('asma', value)}
+                className="mt-2 flex flex-row gap-4"
+              >
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="Não" id="asma-nao" />
+                  <Label htmlFor="asma-nao">Não</Label>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="Sim" id="asma-sim" />
+                  <Label htmlFor="asma-sim">Sim</Label>
+                </div>
+              </RadioGroup>
+              {formData.asma === 'Sim' && (
                 <Textarea
-                  id="nomeCompleto"
-                  value={formData.nomeCompleto}
-                  onChange={(e) => updateField('nomeCompleto', e.target.value)}
-                  placeholder="Digite seu nome completo"
-                  className="mt-1"
+                  value={String(formData.asmaObservacoes || '')}
+                  onChange={(e) => updateField('asmaObservacoes', e.target.value)}
+                  placeholder="Descreva detalhes sobre asma/bronquite"
+                  className="bg-blue-50 mt-2"
                   rows={2}
                 />
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <Label htmlFor="dataNascimento" className="text-sm font-medium">
-                    Data de Nascimento <span className="text-red-500">*</span>
-                  </Label>
-                  <Popover>
-                    <PopoverTrigger asChild>
-                      <Button
-                        variant="outline"
-                        className={cn(
-                          "w-full justify-start text-left font-normal mt-1",
-                          !formData.dataNascimento && "text-muted-foreground"
-                        )}
-                      >
-                        <CalendarIcon className="mr-2 h-4 w-4" />
-                        {formData.dataNascimento ? (
-                          format(new Date(formData.dataNascimento), "dd/MM/yyyy")
-                        ) : (
-                          "Selecione a data"
-                        )}
-                      </Button>
-                    </PopoverTrigger>
-                    <PopoverContent className="w-auto p-0" align="start">
-                      <CalendarComponent
-                        mode="single"
-                        selected={formData.dataNascimento ? new Date(formData.dataNascimento) : undefined}
-                        onSelect={(date) => {
-                          if (date) {
-                            const dateString = date.toISOString().split('T')[0];
-                            updateField('dataNascimento', dateString);
-                            const age = calculateAge(dateString);
-                            updateField('idade', age);
-                          }
-                        }}
-                        disabled={(date) => date > new Date() || date < new Date("1900-01-01")}
-                        initialFocus
-                      />
-                    </PopoverContent>
-                  </Popover>
-                </div>
-
-                {formData.idade > 0 && (
-                  <div>
-                    <Label className="text-sm font-medium">Idade Atual</Label>
-                    <div className="mt-1 p-3 bg-gray-50 rounded-md">
-                      <span className="text-lg font-semibold text-blue-600">
-                        {formData.idade} anos
-                      </span>
-                    </div>
-                  </div>
-                )}
-              </div>
-
-              <div>
-                <Label htmlFor="indicacao" className="text-sm font-medium">
-                  Quem fez a indicação para o Dr. Fernando Azevedo?
-                </Label>
-                <RadioGroup
-                  value={formData.indicacao}
-                  onValueChange={(value) => updateField('indicacao', value)}
-                  className="mt-2"
-                >
-                  <div className="flex items-center space-x-2">
-                    <RadioGroupItem value="Outro médico" id="medico" />
-                    <Label htmlFor="medico">Outro médico</Label>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <RadioGroupItem value="Parente ou amigo" id="parente" />
-                    <Label htmlFor="parente">Parente ou amigo</Label>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <RadioGroupItem value="Outros" id="outros" />
-                    <Label htmlFor="outros">Outros</Label>
-                  </div>
-                </RadioGroup>
-              </div>
-
-              <div>
-                <Label htmlFor="quemIndicou" className="text-sm font-medium">
-                  Cite por favor quem indicou:
-                </Label>
-                <Input
-                  id="quemIndicou"
-                  value={formData.quemIndicou}
-                  onChange={(e) => updateField('quemIndicou', e.target.value)}
-                  placeholder="Nome de quem fez a indicação"
-                  className="mt-1"
-                />
-              </div>
-
-              <div>
-                <Label className="text-sm font-medium">Asma / Bronquite</Label>
-                <RadioGroup
-                  value={String(formData.asma || '')}
-                  onValueChange={(value) => updateField('asma', value)}
-                  className="mt-2 flex flex-row gap-4"
-                >
-                  <div className="flex items-center space-x-2">
-                    <RadioGroupItem value="Não" id="asma-nao" />
-                    <Label htmlFor="asma-nao">Não</Label>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <RadioGroupItem value="Sim" id="asma-sim" />
-                    <Label htmlFor="asma-sim">Sim</Label>
-                  </div>
-                </RadioGroup>
-                {formData.asma === 'Sim' && (
-                  <Textarea
-                    value={String(formData.asmaObservacoes || '')}
-                    onChange={(e) => updateField('asmaObservacoes', e.target.value)}
-                    placeholder="Descreva detalhes sobre asma/bronquite"
-                    className="bg-blue-50 mt-2"
-                    rows={2}
-                  />
-                )}
-              </div>
-
-              <div>
-                <Label className="text-sm font-medium">Rinite</Label>
-                <RadioGroup
-                  value={String(formData.rinite || '')}
-                  onValueChange={(value) => updateField('rinite', value)}
-                  className="mt-2 flex flex-row gap-4"
-                >
-                  <div className="flex items-center space-x-2">
-                    <RadioGroupItem value="Não" id="rinite-nao" />
-                    <Label htmlFor="rinite-nao">Não</Label>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <RadioGroupItem value="Sim" id="rinite-sim" />
-                    <Label htmlFor="rinite-sim">Sim</Label>
-                  </div>
-                </RadioGroup>
-                {formData.rinite === 'Sim' && (
-                  <Textarea
-                    value={String(formData.riniteObservacoes || '')}
-                    onChange={(e) => updateField('riniteObservacoes', e.target.value)}
-                    placeholder="Descreva detalhes sobre rinite"
-                    className="bg-blue-50 mt-2"
-                    rows={2}
-                  />
-                )}
-              </div>
-
-              <div>
-                <Label className="text-sm font-medium">Sinusites</Label>
-                <RadioGroup
-                  value={String(formData.sinusites || '')}
-                  onValueChange={(value) => updateField('sinusites', value)}
-                  className="mt-2 flex flex-row gap-4"
-                >
-                  <div className="flex items-center space-x-2">
-                    <RadioGroupItem value="Não" id="sinusites-nao" />
-                    <Label htmlFor="sinusites-nao">Não</Label>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <RadioGroupItem value="Sim" id="sinusites-sim" />
-                    <Label htmlFor="sinusites-sim">Sim</Label>
-                  </div>
-                </RadioGroup>
-                {formData.sinusites === 'Sim' && (
-                  <Textarea
-                    value={String(formData.sinusitesObservacoes || '')}
-                    onChange={(e) => updateField('sinusitesObservacoes', e.target.value)}
-                    placeholder="Descreva detalhes sobre sinusites"
-                    className="bg-blue-50 mt-2"
-                    rows={2}
-                  />
-                )}
-              </div>
-
-              <div>
-                <Label className="text-sm font-medium">Enfisema / DPOC</Label>
-                <RadioGroup
-                  value={String(formData.enfisema || '')}
-                  onValueChange={(value) => updateField('enfisema', value)}
-                  className="mt-2 flex flex-row gap-4"
-                >
-                  <div className="flex items-center space-x-2">
-                    <RadioGroupItem value="Não" id="enfisema-nao" />
-                    <Label htmlFor="enfisema-nao">Não</Label>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <RadioGroupItem value="Sim" id="enfisema-sim" />
-                    <Label htmlFor="enfisema-sim">Sim</Label>
-                  </div>
-                </RadioGroup>
-                {formData.enfisema === 'Sim' && (
-                  <Textarea
-                    value={String(formData.enfisemaObservacoes || '')}
-                    onChange={(e) => updateField('enfisemaObservacoes', e.target.value)}
-                    placeholder="Descreva detalhes sobre enfisema/DPOC"
-                    className="bg-blue-50 mt-2"
-                    rows={2}
-                  />
-                )}
-              </div>
-
-              <div>
-                <Label className="text-sm font-medium">Pneumonias prévias</Label>
-                <RadioGroup
-                  value={String(formData.pneumonias || '')}
-                  onValueChange={(value) => updateField('pneumonias', value)}
-                  className="mt-2 flex flex-row gap-4"
-                >
-                  <div className="flex items-center space-x-2">
-                    <RadioGroupItem value="Não" id="pneumonias-nao" />
-                    <Label htmlFor="pneumonias-nao">Não</Label>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <RadioGroupItem value="Sim" id="pneumonias-sim" />
-                    <Label htmlFor="pneumonias-sim">Sim</Label>
-                  </div>
-                </RadioGroup>
-                {formData.pneumonias === 'Sim' && (
-                  <Textarea
-                    value={String(formData.pneumoniasObservacoes || '')}
-                    onChange={(e) => updateField('pneumoniasObservacoes', e.target.value)}
-                    placeholder="Descreva detalhes sobre pneumonias prévias"
-                    className="bg-blue-50 mt-2"
-                    rows={2}
-                  />
-                )}
-              </div>
-
-              <div>
-                <Label className="text-sm font-medium">Tabagismo</Label>
-                <RadioGroup
-                  value={String((formData as any).tabagismo || '')}
-                  onValueChange={(value) => updateField('tabagismo' as any, value)}
-                  className="mt-2 flex flex-row gap-4"
-                >
-                  <div className="flex items-center space-x-2">
-                    <RadioGroupItem value="Não" id="tabagismo-nao" />
-                    <Label htmlFor="tabagismo-nao">Não</Label>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <RadioGroupItem value="Sim" id="tabagismo-sim" />
-                    <Label htmlFor="tabagismo-sim">Sim</Label>
-                  </div>
-                </RadioGroup>
-              </div>
-
-              <div>
-                <Checkbox
-                  id="declaracao"
-                  checked={formData.declaracao || false}
-                  onCheckedChange={(checked) => updateField('declaracao', checked)}
-                />
-                <Label htmlFor="declaracao" className="ml-2 text-sm">
-                  Declaro que as informações fornecidas são verdadeiras e completas.
-                </Label>
-              </div>
-
+              )}
             </div>
+
+            {/* Rinite */}
+            <div>
+              <Label className="text-sm font-medium">Rinite</Label>
+              <RadioGroup
+                value={String(formData.rinite || '')}
+                onValueChange={(value) => updateField('rinite', value)}
+                className="mt-2 flex flex-row gap-4"
+              >
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="Não" id="rinite-nao" />
+                  <Label htmlFor="rinite-nao">Não</Label>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="Sim" id="rinite-sim" />
+                  <Label htmlFor="rinite-sim">Sim</Label>
+                </div>
+              </RadioGroup>
+              {formData.rinite === 'Sim' && (
+                <Textarea
+                  value={String(formData.riniteObservacoes || '')}
+                  onChange={(e) => updateField('riniteObservacoes', e.target.value)}
+                  placeholder="Descreva detalhes sobre rinite"
+                  className="bg-blue-50 mt-2"
+                  rows={2}
+                />
+              )}
+            </div>
+
+            {/* Sinusites */}
+            <div>
+              <Label className="text-sm font-medium">Sinusites</Label>
+              <RadioGroup
+                value={String(formData.sinusites || '')}
+                onValueChange={(value) => updateField('sinusites', value)}
+                className="mt-2 flex flex-row gap-4"
+              >
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="Não" id="sinusites-nao" />
+                  <Label htmlFor="sinusites-nao">Não</Label>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="Sim" id="sinusites-sim" />
+                  <Label htmlFor="sinusites-sim">Sim</Label>
+                </div>
+              </RadioGroup>
+              {formData.sinusites === 'Sim' && (
+                <Textarea
+                  value={String(formData.sinusitesObservacoes || '')}
+                  onChange={(e) => updateField('sinusitesObservacoes', e.target.value)}
+                  placeholder="Descreva detalhes sobre sinusites"
+                  className="bg-blue-50 mt-2"
+                  rows={2}
+                />
+              )}
+            </div>
+
+            {/* Enfisema / DPOC */}
+            <div>
+              <Label className="text-sm font-medium">Enfisema / DPOC</Label>
+              <RadioGroup
+                value={String(formData.enfisema || '')}
+                onValueChange={(value) => updateField('enfisema', value)}
+                className="mt-2 flex flex-row gap-4"
+              >
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="Não" id="enfisema-nao" />
+                  <Label htmlFor="enfisema-nao">Não</Label>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="Sim" id="enfisema-sim" />
+                  <Label htmlFor="enfisema-sim">Sim</Label>
+                </div>
+              </RadioGroup>
+              {formData.enfisema === 'Sim' && (
+                <Textarea
+                  value={String(formData.enfisemaObservacoes || '')}
+                  onChange={(e) => updateField('enfisemaObservacoes', e.target.value)}
+                  placeholder="Descreva detalhes sobre enfisema/DPOC"
+                  className="bg-blue-50 mt-2"
+                  rows={2}
+                />
+              )}
+            </div>
+
+            {/* Pneumonias prévias */}
+            <div>
+              <Label className="text-sm font-medium">Pneumonias prévias</Label>
+              <RadioGroup
+                value={String(formData.pneumonias || '')}
+                onValueChange={(value) => updateField('pneumonias', value)}
+                className="mt-2 flex flex-row gap-4"
+              >
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="Não" id="pneumonias-nao" />
+                  <Label htmlFor="pneumonias-nao">Não</Label>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="Sim" id="pneumonias-sim" />
+                  <Label htmlFor="pneumonias-sim">Sim</Label>
+                </div>
+              </RadioGroup>
+              {formData.pneumonias === 'Sim' && (
+                <Textarea
+                  value={String(formData.pneumoniasObservacoes || '')}
+                  onChange={(e) => updateField('pneumoniasObservacoes', e.target.value)}
+                  placeholder="Descreva detalhes sobre pneumonias prévias"
+                  className="bg-blue-50 mt-2"
+                  rows={2}
+                />
+              )}
+            </div>
+
+            {/* Tuberculose */}
+            <div>
+              <Label className="text-sm font-medium">Tuberculose</Label>
+              <RadioGroup
+                value={String(formData.tuberculose || '')}
+                onValueChange={(value) => updateField('tuberculose', value)}
+                className="mt-2 flex flex-row gap-4"
+              >
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="Não" id="tuberculose-nao" />
+                  <Label htmlFor="tuberculose-nao">Não</Label>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="Sim" id="tuberculose-sim" />
+                  <Label htmlFor="tuberculose-sim">Sim</Label>
+                </div>
+              </RadioGroup>
+              {formData.tuberculose === 'Sim' && (
+                <Textarea
+                  value={String(formData.tuberculoseObservacoes || '')}
+                  onChange={(e) => updateField('tuberculoseObservacoes', e.target.value)}
+                  placeholder="Descreva detalhes sobre tuberculose"
+                  className="bg-blue-50 mt-2"
+                  rows={2}
+                />
+              )}
+            </div>
+
+            {/* Tabagismo */}
+            <div>
+              <Label className="text-sm font-medium">Fuma atualmente?</Label>
+              <RadioGroup
+                value={String(formData.fumaAtualmente || '')}
+                onValueChange={(value) => updateField('fumaAtualmente', value)}
+                className="mt-2 flex flex-row gap-4"
+              >
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="Não" id="fuma-nao" />
+                  <Label htmlFor="fuma-nao">Não</Label>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="Sim" id="fuma-sim" />
+                  <Label htmlFor="fuma-sim">Sim</Label>
+                </div>
+              </RadioGroup>
+              
+              {formData.fumaAtualmente === 'Sim' && (
+                <div className="mt-4 space-y-4">
+                  <div>
+                    <Label htmlFor="cigarrosPorDia" className="text-sm font-medium">
+                      Quantos cigarros por dia?
+                    </Label>
+                    <Input
+                      id="cigarrosPorDia"
+                      type="number"
+                      value={formData.cigarrosPorDia || ''}
+                      onChange={(e) => updateField('cigarrosPorDia', parseInt(e.target.value) || 0)}
+                      placeholder="Número de cigarros por dia"
+                      className="mt-1"
+                    />
+                  </div>
+
+                  {formData.cigarrosPorDia && (
+                    <div className="p-3 bg-yellow-50 rounded-md">
+                      <Label className="text-sm font-medium">Carga Tabágica</Label>
+                      <div className="text-lg font-semibold text-yellow-700">
+                        {calculateCargaTabagica()} anos-maço
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+
+            {/* Roncos */}
+            <div>
+              <Label className="text-sm font-medium">Roncos</Label>
+              <RadioGroup
+                value={String(formData.roncos || '')}
+                onValueChange={(value) => updateField('roncos', value)}
+                className="mt-2 flex flex-row gap-4"
+              >
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="Não" id="roncos-nao" />
+                  <Label htmlFor="roncos-nao">Não</Label>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="Sim" id="roncos-sim" />
+                  <Label htmlFor="roncos-sim">Sim</Label>
+                </div>
+              </RadioGroup>
+            </div>
+
+            {/* Sonolência Diurna */}
+            <div>
+              <Label className="text-sm font-medium">Sonolência excessiva durante o dia</Label>
+              <RadioGroup
+                value={String(formData.sonolienciaDiurna || '')}
+                onValueChange={(value) => updateField('sonolienciaDiurna', value)}
+                className="mt-2 flex flex-row gap-4"
+              >
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="Não" id="sonolencia-nao" />
+                  <Label htmlFor="sonolencia-nao">Não</Label>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="Sim" id="sonolencia-sim" />
+                  <Label htmlFor="sonolencia-sim">Sim</Label>
+                </div>
+              </RadioGroup>
+            </div>
+
+            {/* Insônia */}
+            <div>
+              <Label className="text-sm font-medium">Insônia (dificuldade para dormir)</Label>
+              <RadioGroup
+                value={String(formData.insonia || '')}
+                onValueChange={(value) => updateField('insonia', value)}
+                className="mt-2 flex flex-row gap-4"
+              >
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="Não" id="insonia-nao" />
+                  <Label htmlFor="insonia-nao">Não</Label>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="Sim" id="insonia-sim" />
+                  <Label htmlFor="insonia-sim">Sim</Label>
+                </div>
+              </RadioGroup>
+            </div>
+
+            {/* Escala de Epworth */}
+            <div>
+              <Label className="text-lg font-semibold">Escala de Sonolência de Epworth</Label>
+              <p className="text-sm text-gray-600 mt-2 mb-4">
+                Qual a probabilidade de você cochilar ou adormecer nas seguintes situações? 
+                (0 = Nunca cochilaria, 1 = Pequena probabilidade, 2 = Probabilidade moderada, 3 = Grande probabilidade)
+              </p>
+              
+              <div className="space-y-4">
+                {[
+                  { key: 'epworthLendo', label: 'Sentado lendo' },
+                  { key: 'epworthTV', label: 'Assistindo TV' },
+                  { key: 'epworthPublico', label: 'Sentado inativo em local público' },
+                  { key: 'epworthTransporte', label: 'Como passageiro de carro por 1 hora' },
+                  { key: 'epworthDescansando', label: 'Descansando à tarde' },
+                  { key: 'epworthConversando', label: 'Sentado conversando com alguém' },
+                  { key: 'epworthAposRefeicao', label: 'Sentado após almoço sem álcool' },
+                  { key: 'epworthDirigindo', label: 'No carro parado no trânsito' }
+                ].map((item) => (
+                  <div key={item.key} className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center">
+                    <Label className="text-sm">{item.label}</Label>
+                    <RadioGroup
+                      value={String(formData[item.key as keyof typeof formData] || '')}
+                      onValueChange={(value) => updateField(item.key as any, parseInt(value))}
+                      className="flex flex-row gap-4"
+                    >
+                      {[0, 1, 2, 3].map((score) => (
+                        <div key={score} className="flex items-center space-x-2">
+                          <RadioGroupItem value={String(score)} id={`${item.key}-${score}`} />
+                          <Label htmlFor={`${item.key}-${score}`}>{score}</Label>
+                        </div>
+                      ))}
+                    </RadioGroup>
+                  </div>
+                ))}
+              </div>
+
+              {formData.epworthTotal && (
+                <div className="mt-4 p-3 bg-blue-50 rounded-md">
+                  <Label className="text-sm font-medium">Total da Escala de Epworth</Label>
+                  <div className="text-lg font-semibold text-blue-600">
+                    {calculateEpworthTotal()} pontos
+                  </div>
+                  <p className="text-xs text-gray-600 mt-1">
+                    {calculateEpworthTotal() > 10 ? 'Sonolência excessiva' : 'Sonolência normal'}
+                  </p>
+                </div>
+              )}
+            </div>
+
+            {/* Pressão Alta */}
+            <div>
+              <Label className="text-sm font-medium">Pressão alta</Label>
+              <RadioGroup
+                value={String(formData.pressaoAlta || '')}
+                onValueChange={(value) => updateField('pressaoAlta', value)}
+                className="mt-2 flex flex-row gap-4"
+              >
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="Não" id="pressao-nao" />
+                  <Label htmlFor="pressao-nao">Não</Label>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="Sim" id="pressao-sim" />
+                  <Label htmlFor="pressao-sim">Sim</Label>
+                </div>
+              </RadioGroup>
+            </div>
+
+            {/* Diabetes */}
+            <div>
+              <Label className="text-sm font-medium">Diabetes</Label>
+              <RadioGroup
+                value={String(formData.diabetes || '')}
+                onValueChange={(value) => updateField('diabetes', value)}
+                className="mt-2 flex flex-row gap-4"
+              >
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="Não" id="diabetes-nao" />
+                  <Label htmlFor="diabetes-nao">Não</Label>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="Sim" id="diabetes-sim" />
+                  <Label htmlFor="diabetes-sim">Sim</Label>
+                </div>
+              </RadioGroup>
+            </div>
+
+            {/* Problemas Cardíacos */}
+            <div>
+              <Label className="text-sm font-medium">Outros problemas cardíacos</Label>
+              <RadioGroup
+                value={String(formData.outrosCardiacos || '')}
+                onValueChange={(value) => updateField('outrosCardiacos', value)}
+                className="mt-2 flex flex-row gap-4"
+              >
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="Não" id="cardiaca-nao" />
+                  <Label htmlFor="cardiaca-nao">Não</Label>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="Sim" id="cardiaca-sim" />
+                  <Label htmlFor="cardiaca-sim">Sim</Label>
+                </div>
+              </RadioGroup>
+              {formData.outrosCardiacos === 'Sim' && (
+                <Textarea
+                  value={String(formData.outrosCardiacosObservacoes || '')}
+                  onChange={(e) => updateField('outrosCardiacosObservacoes', e.target.value)}
+                  placeholder="Descreva problemas cardíacos"
+                  className="bg-blue-50 mt-2"
+                  rows={2}
+                />
+              )}
+            </div>
+
+            {/* Problemas Neurológicos */}
+            <div>
+              <Label className="text-sm font-medium">Problemas neurológicos</Label>
+              <RadioGroup
+                value={String(formData.neurologicos || '')}
+                onValueChange={(value) => updateField('neurologicos', value)}
+                className="mt-2 flex flex-row gap-4"
+              >
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="Não" id="neuro-nao" />
+                  <Label htmlFor="neuro-nao">Não</Label>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="Sim" id="neuro-sim" />
+                  <Label htmlFor="neuro-sim">Sim</Label>
+                </div>
+              </RadioGroup>
+              {formData.neurologicos === 'Sim' && (
+                <Textarea
+                  value={String(formData.neurologicosObservacoes || '')}
+                  onChange={(e) => updateField('neurologicosObservacoes', e.target.value)}
+                  placeholder="Descreva problemas neurológicos"
+                  className="bg-blue-50 mt-2"
+                  rows={2}
+                />
+              )}
+            </div>
+
+            {/* Alergias a medicamentos */}
+            <div>
+              <Label className="text-sm font-medium">Alergias a medicamentos</Label>
+              <RadioGroup
+                value={String(formData.alergiasMedicamentos || '')}
+                onValueChange={(value) => updateField('alergiasMedicamentos', value)}
+                className="mt-2 flex flex-row gap-4"
+              >
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="Não" id="alergia-nao" />
+                  <Label htmlFor="alergia-nao">Não</Label>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="Sim" id="alergia-sim" />
+                  <Label htmlFor="alergia-sim">Sim</Label>
+                </div>
+              </RadioGroup>
+              {formData.alergiasMedicamentos === 'Sim' && (
+                <Textarea
+                  value={String(formData.alergiasMedicamentosLista || '')}
+                  onChange={(e) => updateField('alergiasMedicamentosLista', e.target.value)}
+                  placeholder="Liste suas alergias a medicamentos"
+                  className="bg-blue-50 mt-2"
+                  rows={2}
+                />
+              )}
+            </div>
+
+            {/* Outros problemas */}
+            <div>
+              <Label className="text-sm font-medium">Outros problemas de saúde</Label>
+              <RadioGroup
+                value={String(formData.outrosProblemas || '')}
+                onValueChange={(value) => updateField('outrosProblemas', value)}
+                className="mt-2 flex flex-row gap-4"
+              >
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="Não" id="outros-nao" />
+                  <Label htmlFor="outros-nao">Não</Label>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="Sim" id="outros-sim" />
+                  <Label htmlFor="outros-sim">Sim</Label>
+                </div>
+              </RadioGroup>
+              {formData.outrosProblemas === 'Sim' && (
+                <Textarea
+                  value={String(formData.outrosProblemasObservacoes || '')}
+                  onChange={(e) => updateField('outrosProblemasObservacoes', e.target.value)}
+                  placeholder="Descreva outros problemas de saúde"
+                  className="bg-blue-50 mt-2"
+                  rows={3}
+                />
+              )}
+            </div>
+
+            {/* Declaração */}
+            <div className="flex items-start space-x-2 pt-4 border-t">
+              <Checkbox
+                id="declaracao"
+                checked={formData.declaracao || false}
+                onCheckedChange={(checked) => updateField('declaracao', checked)}
+              />
+              <Label htmlFor="declaracao" className="text-sm leading-relaxed">
+                Declaro que as informações fornecidas são verdadeiras e completas, 
+                e autorizo o uso dessas informações para fins médicos.
+                <span className="text-red-500 ml-1">*</span>
+              </Label>
+            </div>
+
           </CardContent>
         </Card>
 
