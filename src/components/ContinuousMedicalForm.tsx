@@ -402,53 +402,55 @@ export default function ContinuousMedicalForm() {
             </div>
           </div>
 
-          {/* 4. ESCALA DE EPWORTH */}
-          <div className="space-y-6">
-            <h2 className="text-xl font-bold text-gray-800 border-b pb-2">Escala de Sonolência de Epworth</h2>
-            <p className="text-sm text-gray-600">
-              Qual a probabilidade de você cochilar ou adormecer nas seguintes situações? 
-              (0 = nunca cochilaria, 1 = pequena chance, 2 = chance moderada, 3 = alta chance)
-            </p>
-            
-            <div className="space-y-4">
-              {[
-                { key: 'epworthLendo' as keyof MedicalFormData, label: 'Sentado e lendo' },
-                { key: 'epworthTV' as keyof MedicalFormData, label: 'Assistindo TV' },
-                { key: 'epworthPublico' as keyof MedicalFormData, label: 'Sentado em lugar público (cinema, igreja, sala de espera)' },
-                { key: 'epworthTransporte' as keyof MedicalFormData, label: 'Como passageiro de trem, carro ou ônibus, andando uma hora sem parar' },
-                { key: 'epworthDescansando' as keyof MedicalFormData, label: 'Descansando à tarde quando as circunstâncias permitem' },
-                { key: 'epworthConversando' as keyof MedicalFormData, label: 'Sentado e conversando com alguém' },
-                { key: 'epworthAposRefeicao' as keyof MedicalFormData, label: 'Sentado calmamente após um almoço sem álcool' },
-                { key: 'epworthDirigindo' as keyof MedicalFormData, label: 'Em um carro, enquanto para por alguns minutos no trânsito' },
-              ].map((item) => (
-                <div key={String(item.key)} className="space-y-2">
-                  <Label className="text-sm font-medium">{item.label}</Label>
-                  <RadioGroup
-                    value={String(formData[item.key] || 0)}
-                    onValueChange={(value) => updateField(item.key, parseInt(value))}
-                    className="flex flex-row gap-6"
-                  >
-                    {[0, 1, 2, 3].map((score) => (
-                      <div key={score} className="flex items-center space-x-2">
-                        <RadioGroupItem value={String(score)} id={`${String(item.key)}-${score}`} />
-                        <Label htmlFor={`${String(item.key)}-${score}`}>{score}</Label>
-                      </div>
-                    ))}
-                  </RadioGroup>
-                </div>
-              ))}
+          {/* 4. ESCALA DE EPWORTH - Só mostra se sonolência diurna for "Sim" */}
+          {formData.sonolienciaDiurna === 'Sim' && (
+            <div className="space-y-6">
+              <h2 className="text-xl font-bold text-gray-800 border-b pb-2">Escala de Sonolência de Epworth</h2>
+              <p className="text-sm text-gray-600">
+                Qual a probabilidade de você cochilar ou adormecer nas seguintes situações? 
+                (0 = nunca cochilaria, 1 = pequena chance, 2 = chance moderada, 3 = alta chance)
+              </p>
               
-              <div className="mt-4 p-4 bg-blue-50 rounded-lg">
-                <Label className="text-sm font-medium">Total da Escala de Epworth: {formData.epworthTotal}</Label>
-                <p className="text-xs text-gray-600 mt-1">
-                  0-7: Improvável que você tenha sonolência anormal<br/>
-                  8-9: Sonolência leve<br/>
-                  10-15: Sonolência moderada<br/>
-                  16-24: Sonolência severa
-                </p>
+              <div className="space-y-4">
+                {[
+                  { key: 'epworthLendo' as keyof MedicalFormData, label: 'Sentado e lendo' },
+                  { key: 'epworthTV' as keyof MedicalFormData, label: 'Assistindo TV' },
+                  { key: 'epworthPublico' as keyof MedicalFormData, label: 'Sentado em lugar público (cinema, igreja, sala de espera)' },
+                  { key: 'epworthTransporte' as keyof MedicalFormData, label: 'Como passageiro de trem, carro ou ônibus, andando uma hora sem parar' },
+                  { key: 'epworthDescansando' as keyof MedicalFormData, label: 'Descansando à tarde quando as circunstâncias permitem' },
+                  { key: 'epworthConversando' as keyof MedicalFormData, label: 'Sentado e conversando com alguém' },
+                  { key: 'epworthAposRefeicao' as keyof MedicalFormData, label: 'Sentado calmamente após um almoço sem álcool' },
+                  { key: 'epworthDirigindo' as keyof MedicalFormData, label: 'Em um carro, enquanto para por alguns minutos no trânsito' },
+                ].map((item) => (
+                  <div key={String(item.key)} className="space-y-2">
+                    <Label className="text-sm font-medium">{item.label}</Label>
+                    <RadioGroup
+                      value={formData[item.key] !== undefined ? String(formData[item.key]) : ''}
+                      onValueChange={(value) => updateField(item.key, parseInt(value))}
+                      className="flex flex-row gap-6"
+                    >
+                      {[0, 1, 2, 3].map((score) => (
+                        <div key={score} className="flex items-center space-x-2">
+                          <RadioGroupItem value={String(score)} id={`${String(item.key)}-${score}`} />
+                          <Label htmlFor={`${String(item.key)}-${score}`}>{score}</Label>
+                        </div>
+                      ))}
+                    </RadioGroup>
+                  </div>
+                ))}
+                
+                <div className="mt-4 p-4 bg-blue-50 rounded-lg">
+                  <Label className="text-sm font-medium">Total da Escala de Epworth: {formData.epworthTotal}</Label>
+                  <p className="text-xs text-gray-600 mt-1">
+                    0-7: Improvável que você tenha sonolência anormal<br/>
+                    8-9: Sonolência leve<br/>
+                    10-15: Sonolência moderada<br/>
+                    16-24: Sonolência severa
+                  </p>
+                </div>
               </div>
             </div>
-          </div>
+          )}
 
           {/* 5. CARDIOVASCULAR */}
           <div className="space-y-6">
@@ -569,6 +571,346 @@ export default function ContinuousMedicalForm() {
             
             <div className="grid grid-cols-1 gap-6">
               {renderFieldGroup(allergyFields)}
+            </div>
+          </div>
+
+          {/* 10. HISTÓRIA FAMILIAR */}
+          <div className="space-y-6">
+            <h2 className="text-xl font-bold text-gray-800 border-b pb-2">História Familiar</h2>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {/* Pai */}
+              <div className="space-y-4">
+                <h3 className="font-semibold text-gray-700">Pai</h3>
+                <div>
+                  <Label className="text-sm font-medium">Status</Label>
+                  <RadioGroup
+                    value={String(formData.pai || '')}
+                    onValueChange={(value) => updateField('pai', value)}
+                    className="mt-2 flex flex-row gap-4"
+                  >
+                    <div className="flex items-center space-x-2">
+                      <RadioGroupItem value="Vivo" id="pai-vivo" />
+                      <Label htmlFor="pai-vivo">Vivo</Label>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <RadioGroupItem value="Falecido" id="pai-falecido" />
+                      <Label htmlFor="pai-falecido">Falecido</Label>
+                    </div>
+                  </RadioGroup>
+                </div>
+                
+                {formData.pai === 'Vivo' && (
+                  <div>
+                    <Label className="text-sm font-medium">Doenças atuais</Label>
+                    <Textarea
+                      value={formData.paiDoencas}
+                      onChange={(e) => updateField('paiDoencas', e.target.value)}
+                      placeholder="Descreva as doenças do pai"
+                      className="mt-1 bg-blue-50"
+                      rows={2}
+                    />
+                  </div>
+                )}
+                
+                {formData.pai === 'Falecido' && (
+                  <div>
+                    <Label className="text-sm font-medium">Motivo do falecimento</Label>
+                    <Textarea
+                      value={formData.paiMotivoFalecimento}
+                      onChange={(e) => updateField('paiMotivoFalecimento', e.target.value)}
+                      placeholder="Descreva o motivo do falecimento"
+                      className="mt-1 bg-blue-50"
+                      rows={2}
+                    />
+                  </div>
+                )}
+              </div>
+
+              {/* Mãe */}
+              <div className="space-y-4">
+                <h3 className="font-semibold text-gray-700">Mãe</h3>
+                <div>
+                  <Label className="text-sm font-medium">Status</Label>
+                  <RadioGroup
+                    value={String(formData.mae || '')}
+                    onValueChange={(value) => updateField('mae', value)}
+                    className="mt-2 flex flex-row gap-4"
+                  >
+                    <div className="flex items-center space-x-2">
+                      <RadioGroupItem value="Vivo" id="mae-vivo" />
+                      <Label htmlFor="mae-vivo">Viva</Label>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <RadioGroupItem value="Falecida" id="mae-falecida" />
+                      <Label htmlFor="mae-falecida">Falecida</Label>
+                    </div>
+                  </RadioGroup>
+                </div>
+                
+                {formData.mae === 'Vivo' && (
+                  <div>
+                    <Label className="text-sm font-medium">Doenças atuais</Label>
+                    <Textarea
+                      value={formData.maeDoencas}
+                      onChange={(e) => updateField('maeDoencas', e.target.value)}
+                      placeholder="Descreva as doenças da mãe"
+                      className="mt-1 bg-blue-50"
+                      rows={2}
+                    />
+                  </div>
+                )}
+                
+                {formData.mae === 'Falecida' && (
+                  <div>
+                    <Label className="text-sm font-medium">Motivo do falecimento</Label>
+                    <Textarea
+                      value={formData.maeMotivoFalecimento}
+                      onChange={(e) => updateField('maeMotivoFalecimento', e.target.value)}
+                      placeholder="Descreva o motivo do falecimento"
+                      className="mt-1 bg-blue-50"
+                      rows={2}
+                    />
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Irmãos e Filhos */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <Label className="text-sm font-medium">Irmãos</Label>
+                <RadioGroup
+                  value={String(formData.irmaos || '')}
+                  onValueChange={(value) => updateField('irmaos', value)}
+                  className="mt-2 flex flex-col gap-2"
+                >
+                  <div className="flex items-center space-x-2">
+                    <RadioGroupItem value="Sim, tenho irmãos" id="irmaos-sim" />
+                    <Label htmlFor="irmaos-sim">Sim, tenho irmãos</Label>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <RadioGroupItem value="Não tenho irmãos" id="irmaos-nao" />
+                    <Label htmlFor="irmaos-nao">Não tenho irmãos</Label>
+                  </div>
+                </RadioGroup>
+                {formData.irmaos === 'Sim, tenho irmãos' && (
+                  <Textarea
+                    value={formData.irmaosDoencas}
+                    onChange={(e) => updateField('irmaosDoencas', e.target.value)}
+                    placeholder="Descreva problemas de saúde dos irmãos"
+                    className="mt-2 bg-blue-50"
+                    rows={2}
+                  />
+                )}
+              </div>
+              
+              <div>
+                <Label className="text-sm font-medium">Filhos</Label>
+                <RadioGroup
+                  value={String(formData.filhos || '')}
+                  onValueChange={(value) => updateField('filhos', value)}
+                  className="mt-2 flex flex-col gap-2"
+                >
+                  <div className="flex items-center space-x-2">
+                    <RadioGroupItem value="Sim, tenho filhos" id="filhos-sim" />
+                    <Label htmlFor="filhos-sim">Sim, tenho filhos</Label>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <RadioGroupItem value="Não tenho filhos" id="filhos-nao" />
+                    <Label htmlFor="filhos-nao">Não tenho filhos</Label>
+                  </div>
+                </RadioGroup>
+                {formData.filhos === 'Sim, tenho filhos' && (
+                  <Textarea
+                    value={formData.filhosDoencas}
+                    onChange={(e) => updateField('filhosDoencas', e.target.value)}
+                    placeholder="Descreva problemas de saúde dos filhos"
+                    className="mt-2 bg-blue-50"
+                    rows={2}
+                  />
+                )}
+              </div>
+            </div>
+
+            {/* Outros parentes */}
+            <div>
+              <Label className="text-sm font-medium">Outros parentes com problemas de saúde relevantes</Label>
+              <RadioGroup
+                value={String(formData.outrosParentes || '')}
+                onValueChange={(value) => updateField('outrosParentes', value)}
+                className="mt-2 flex flex-row gap-4"
+              >
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="Não" id="outros-parentes-nao" />
+                  <Label htmlFor="outros-parentes-nao">Não</Label>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="Sim" id="outros-parentes-sim" />
+                  <Label htmlFor="outros-parentes-sim">Sim</Label>
+                </div>
+              </RadioGroup>
+              {formData.outrosParentes === 'Sim' && (
+                <Textarea
+                  value={formData.outrosParentesDetalhes}
+                  onChange={(e) => updateField('outrosParentesDetalhes', e.target.value)}
+                  placeholder="Descreva outros parentes e seus problemas de saúde"
+                  className="mt-2 bg-blue-50"
+                  rows={3}
+                />
+              )}
+            </div>
+          </div>
+
+          {/* 11. HÁBITOS PESSOAIS */}
+          <div className="space-y-6">
+            <h2 className="text-xl font-bold text-gray-800 border-b pb-2">Hábitos Pessoais</h2>
+            
+            {/* Tabagismo */}
+            <div className="space-y-4">
+              <h3 className="font-semibold text-gray-700">Tabagismo</h3>
+              
+              <div>
+                <Label className="text-sm font-medium">Fuma atualmente?</Label>
+                <RadioGroup
+                  value={String(formData.fumaAtualmente || '')}
+                  onValueChange={(value) => updateField('fumaAtualmente', value)}
+                  className="mt-2 flex flex-row gap-4"
+                >
+                  <div className="flex items-center space-x-2">
+                    <RadioGroupItem value="Não" id="fuma-nao" />
+                    <Label htmlFor="fuma-nao">Não</Label>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <RadioGroupItem value="Sim" id="fuma-sim" />
+                    <Label htmlFor="fuma-sim">Sim</Label>
+                  </div>
+                </RadioGroup>
+              </div>
+
+              {formData.fumaAtualmente === 'Sim' && (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <Label className="text-sm font-medium">Tipo de fumo</Label>
+                    <Input
+                      value={formData.tipoFumo}
+                      onChange={(e) => updateField('tipoFumo', e.target.value)}
+                      placeholder="Ex: cigarro, cachimbo, charuto"
+                      className="mt-1 bg-blue-50"
+                    />
+                  </div>
+                  <div>
+                    <Label className="text-sm font-medium">Cigarros por dia</Label>
+                    <Input
+                      type="number"
+                      value={formData.cigarrosPorDia}
+                      onChange={(e) => updateField('cigarrosPorDia', parseInt(e.target.value) || 0)}
+                      className="mt-1 bg-blue-50"
+                    />
+                  </div>
+                </div>
+              )}
+
+              {formData.fumaAtualmente === 'Não' && (
+                <div>
+                  <Label className="text-sm font-medium">Já fumou antes?</Label>
+                  <RadioGroup
+                    value={String(formData.jaFumou || '')}
+                    onValueChange={(value) => updateField('jaFumou', value)}
+                    className="mt-2 flex flex-row gap-4"
+                  >
+                    <div className="flex items-center space-x-2">
+                      <RadioGroupItem value="Não" id="ja-fumou-nao" />
+                      <Label htmlFor="ja-fumou-nao">Não</Label>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <RadioGroupItem value="Sim" id="ja-fumou-sim" />
+                      <Label htmlFor="ja-fumou-sim">Sim</Label>
+                    </div>
+                  </RadioGroup>
+                </div>
+              )}
+            </div>
+
+            {/* Álcool */}
+            <div className="space-y-4">
+              <h3 className="font-semibold text-gray-700">Consumo de Álcool</h3>
+              
+              <div>
+                <Label className="text-sm font-medium">Consome álcool atualmente?</Label>
+                <RadioGroup
+                  value={String(formData.consumeAlcool || '')}
+                  onValueChange={(value) => updateField('consumeAlcool', value)}
+                  className="mt-2 flex flex-row gap-4"
+                >
+                  <div className="flex items-center space-x-2">
+                    <RadioGroupItem value="Não" id="alcool-nao" />
+                    <Label htmlFor="alcool-nao">Não</Label>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <RadioGroupItem value="Sim" id="alcool-sim" />
+                    <Label htmlFor="alcool-sim">Sim</Label>
+                  </div>
+                </RadioGroup>
+              </div>
+
+              {formData.consumeAlcool === 'Sim' && (
+                <div>
+                  <Label className="text-sm font-medium">Classificação do consumo</Label>
+                  <Input
+                    value={formData.classificacaoConsumo}
+                    onChange={(e) => updateField('classificacaoConsumo', e.target.value)}
+                    placeholder="Ex: social, moderado, frequente"
+                    className="mt-1 bg-blue-50"
+                  />
+                </div>
+              )}
+            </div>
+
+            {/* Atividade Física */}
+            <div className="space-y-4">
+              <h3 className="font-semibold text-gray-700">Atividade Física</h3>
+              
+              <div>
+                <Label className="text-sm font-medium">Pratica atividade física?</Label>
+                <RadioGroup
+                  value={String(formData.atividadeFisica || '')}
+                  onValueChange={(value) => updateField('atividadeFisica', value)}
+                  className="mt-2 flex flex-row gap-4"
+                >
+                  <div className="flex items-center space-x-2">
+                    <RadioGroupItem value="Não" id="atividade-nao" />
+                    <Label htmlFor="atividade-nao">Não</Label>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <RadioGroupItem value="Sim" id="atividade-sim" />
+                    <Label htmlFor="atividade-sim">Sim</Label>
+                  </div>
+                </RadioGroup>
+              </div>
+
+              {formData.atividadeFisica === 'Sim' && (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <Label className="text-sm font-medium">Tipo de atividade</Label>
+                    <Input
+                      value={formData.tipoAtividade}
+                      onChange={(e) => updateField('tipoAtividade', e.target.value)}
+                      placeholder="Ex: caminhada, academia, futebol"
+                      className="mt-1 bg-blue-50"
+                    />
+                  </div>
+                  <div>
+                    <Label className="text-sm font-medium">Frequência semanal</Label>
+                    <Input
+                      value={formData.frequenciaSemanal}
+                      onChange={(e) => updateField('frequenciaSemanal', e.target.value)}
+                      placeholder="Ex: 3x por semana"
+                      className="mt-1 bg-blue-50"
+                    />
+                  </div>
+                </div>
+              )}
             </div>
           </div>
 
