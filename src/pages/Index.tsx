@@ -1,7 +1,8 @@
-import { MedicalForm } from "@/components/MedicalForm";
+
+import { ContinuousMedicalForm } from "@/components/ContinuousMedicalForm";
 
 const Index = () => {
-  return <MedicalForm />;
+  return <ContinuousMedicalForm />;
 };
 
 export default Index;
