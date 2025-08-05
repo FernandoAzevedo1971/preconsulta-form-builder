@@ -114,8 +114,11 @@ export default function ContinuousMedicalForm() {
         </RadioGroup>
         {formData[item.key] === 'Sim' && (
           <Textarea
-            value={String(formData[item.obsKey || item.listKey || item.key] || '')}
-            onChange={(e) => updateField(item.obsKey || item.listKey || item.key, e.target.value)}
+            value={String(formData[item.obsKey as keyof MedicalFormData] || formData[item.listKey as keyof MedicalFormData] || formData[item.key] || '')}
+            onChange={(e) => {
+              const targetKey = item.obsKey || item.listKey || item.key;
+              updateField(targetKey as keyof MedicalFormData, e.target.value);
+            }}
             placeholder={`Descreva detalhes sobre ${item.label.toLowerCase()}`}
             className="bg-blue-50"
             rows={2}
