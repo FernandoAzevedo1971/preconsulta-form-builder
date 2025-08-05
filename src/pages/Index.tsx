@@ -1,5 +1,5 @@
 
-import { ContinuousMedicalForm } from "@/components/ContinuousMedicalForm";
+import ContinuousMedicalForm from "@/components/ContinuousMedicalForm";
 
 const Index = () => {
   return <ContinuousMedicalForm />;
