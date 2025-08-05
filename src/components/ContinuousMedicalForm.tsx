@@ -439,7 +439,7 @@ export default function ContinuousMedicalForm() {
               ))}
               
               <div className="mt-4 p-4 bg-blue-50 rounded-lg">
-                <Label className="text-sm font-medium">Total da Escala de Epworth: {calculateEpworthTotal()}</Label>
+                <Label className="text-sm font-medium">Total da Escala de Epworth: {formData.epworthTotal}</Label>
                 <p className="text-xs text-gray-600 mt-1">
                   0-7: Improvável que você tenha sonolência anormal<br/>
                   8-9: Sonolência leve<br/>

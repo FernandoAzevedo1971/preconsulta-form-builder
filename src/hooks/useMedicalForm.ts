@@ -203,22 +203,28 @@ export const useMedicalForm = () => {
   }, []);
 
   const calculateEpworthTotal = useCallback(() => {
-    const total = formData.epworthLendo + formData.epworthTV + formData.epworthPublico + 
-                 formData.epworthTransporte + formData.epworthDescansando + formData.epworthConversando + 
-                 formData.epworthAposRefeicao + formData.epworthDirigindo;
-    
-    updateField('epworthTotal', total);
+    let total = 0;
+    setFormData(prev => {
+      total = prev.epworthLendo + prev.epworthTV + prev.epworthPublico + 
+              prev.epworthTransporte + prev.epworthDescansando + prev.epworthConversando + 
+              prev.epworthAposRefeicao + prev.epworthDirigindo;
+      
+      return { ...prev, epworthTotal: total };
+    });
     return total;
-  }, [formData, updateField]);
+  }, []);
 
   const calculateCargaTabagica = useCallback(() => {
-    const anos = formData.idadeCessouFumo - formData.idadeInicioFumo;
-    const macosPorDia = formData.cigarrosPorDia / 20;
-    const carga = Math.round(anos * macosPorDia);
-    
-    updateField('cargaTabagica', carga);
+    let carga = 0;
+    setFormData(prev => {
+      const anos = prev.idadeCessouFumo - prev.idadeInicioFumo;
+      const macosPorDia = prev.cigarrosPorDia / 20;
+      carga = Math.round(anos * macosPorDia);
+      
+      return { ...prev, cargaTabagica: carga };
+    });
     return carga;
-  }, [formData, updateField]);
+  }, []);
 
   const resetForm = useCallback(() => {
     setFormData(initialFormData);
