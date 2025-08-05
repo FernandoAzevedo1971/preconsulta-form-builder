@@ -914,6 +914,234 @@ export default function ContinuousMedicalForm() {
             </div>
           </div>
 
+          {/* 12. MEDICAÇÕES ATUAIS */}
+          <div className="space-y-6">
+            <h2 className="text-xl font-bold text-gray-800 border-b pb-2">Medicações Atuais</h2>
+            <p className="text-sm text-gray-600">
+              Liste todas as medicações que você toma atualmente (até 11 medicações)
+            </p>
+            
+            <div className="space-y-4">
+              {Array.from({ length: 11 }, (_, index) => (
+                <div key={index}>
+                  <Label className="text-sm font-medium">Medicação {index + 1}</Label>
+                  <Input
+                    value={formData.medicacoes[index] || ''}
+                    onChange={(e) => updateArrayField('medicacoes', index, e.target.value)}
+                    placeholder="Nome da medicação, dosagem e frequência"
+                    className="mt-1 bg-blue-50"
+                  />
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* 13. CIRURGIAS PRÉVIAS */}
+          <div className="space-y-6">
+            <h2 className="text-xl font-bold text-gray-800 border-b pb-2">Cirurgias Prévias</h2>
+            <p className="text-sm text-gray-600">
+              Liste as cirurgias que você já realizou (até 6 cirurgias)
+            </p>
+            
+            <div className="space-y-4">
+              {Array.from({ length: 6 }, (_, index) => (
+                <div key={index}>
+                  <Label className="text-sm font-medium">Cirurgia {index + 1}</Label>
+                  <Input
+                    value={formData.cirurgias[index] || ''}
+                    onChange={(e) => updateArrayField('cirurgias', index, e.target.value)}
+                    placeholder="Tipo de cirurgia, ano e motivo"
+                    className="mt-1 bg-blue-50"
+                  />
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* 14. VACINAÇÕES */}
+          <div className="space-y-6">
+            <h2 className="text-xl font-bold text-gray-800 border-b pb-2">Vacinações</h2>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {/* Vacina da Gripe */}
+              <div className="space-y-4">
+                <h3 className="font-semibold text-gray-700">Vacina da Gripe (Influenza)</h3>
+                <div>
+                  <Label className="text-sm font-medium">Tomou a vacina da gripe?</Label>
+                  <RadioGroup
+                    value={String(formData.influenza || '')}
+                    onValueChange={(value) => updateField('influenza', value)}
+                    className="mt-2 flex flex-row gap-4"
+                  >
+                    <div className="flex items-center space-x-2">
+                      <RadioGroupItem value="Não" id="influenza-nao" />
+                      <Label htmlFor="influenza-nao">Não</Label>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <RadioGroupItem value="Sim" id="influenza-sim" />
+                      <Label htmlFor="influenza-sim">Sim</Label>
+                    </div>
+                  </RadioGroup>
+                </div>
+                
+                {formData.influenza === 'Sim' && (
+                  <div>
+                    <Label className="text-sm font-medium">Ano da última dose</Label>
+                    <Input
+                      type="number"
+                      value={formData.influenzaAno || ''}
+                      onChange={(e) => updateField('influenzaAno', parseInt(e.target.value) || 0)}
+                      placeholder="Ex: 2024"
+                      className="mt-1 bg-blue-50"
+                    />
+                  </div>
+                )}
+              </div>
+
+              {/* Vacina COVID-19 */}
+              <div className="space-y-4">
+                <h3 className="font-semibold text-gray-700">Vacina COVID-19</h3>
+                <div>
+                  <Label className="text-sm font-medium">Tomou a vacina COVID-19?</Label>
+                  <RadioGroup
+                    value={String(formData.covid || '')}
+                    onValueChange={(value) => updateField('covid', value)}
+                    className="mt-2 flex flex-row gap-4"
+                  >
+                    <div className="flex items-center space-x-2">
+                      <RadioGroupItem value="Não" id="covid-nao" />
+                      <Label htmlFor="covid-nao">Não</Label>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <RadioGroupItem value="Sim" id="covid-sim" />
+                      <Label htmlFor="covid-sim">Sim</Label>
+                    </div>
+                  </RadioGroup>
+                </div>
+                
+                {formData.covid === 'Sim' && (
+                  <div className="space-y-3">
+                    <div>
+                      <Label className="text-sm font-medium">Ano da última dose</Label>
+                      <Input
+                        type="number"
+                        value={formData.covidAno || ''}
+                        onChange={(e) => updateField('covidAno', parseInt(e.target.value) || 0)}
+                        placeholder="Ex: 2024"
+                        className="mt-1 bg-blue-50"
+                      />
+                    </div>
+                    <div>
+                      <Label className="text-sm font-medium">Quantas doses tomou?</Label>
+                      <Input
+                        value={formData.covidDoses || ''}
+                        onChange={(e) => updateField('covidDoses', e.target.value)}
+                        placeholder="Ex: 4 doses"
+                        className="mt-1 bg-blue-50"
+                      />
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Vacina Pneumocócica */}
+            <div className="space-y-4">
+              <h3 className="font-semibold text-gray-700">Vacina Pneumocócica</h3>
+              <div>
+                <Label className="text-sm font-medium">Tomou a vacina pneumocócica?</Label>
+                <RadioGroup
+                  value={String(formData.pneumococcica || '')}
+                  onValueChange={(value) => updateField('pneumococcica', value)}
+                  className="mt-2 flex flex-row gap-4"
+                >
+                  <div className="flex items-center space-x-2">
+                    <RadioGroupItem value="Não" id="pneumococica-nao" />
+                    <Label htmlFor="pneumococica-nao">Não</Label>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <RadioGroupItem value="Sim" id="pneumococica-sim" />
+                    <Label htmlFor="pneumococica-sim">Sim</Label>
+                  </div>
+                </RadioGroup>
+              </div>
+              
+              {formData.pneumococcica === 'Sim' && (
+                <div>
+                  <Label className="text-sm font-medium">Ano da vacinação</Label>
+                  <Input
+                    type="number"
+                    value={formData.pneumococcicaAno || ''}
+                    onChange={(e) => updateField('pneumococcicaAno', parseInt(e.target.value) || 0)}
+                    placeholder="Ex: 2023"
+                    className="mt-1 bg-blue-50"
+                  />
+                </div>
+              )}
+            </div>
+
+            {/* Outras Vacinas */}
+            <div className="space-y-4">
+              <h3 className="font-semibold text-gray-700">Outras Vacinas</h3>
+              <p className="text-sm text-gray-600">
+                Liste outras vacinas que tomou recentemente
+              </p>
+              
+              <div className="space-y-3">
+                {Array.from({ length: 5 }, (_, index) => (
+                  <div key={index}>
+                    <Label className="text-sm font-medium">Outra vacina {index + 1}</Label>
+                    <Input
+                      value={formData.outrasVacinas[index] || ''}
+                      onChange={(e) => updateArrayField('outrasVacinas', index, e.target.value)}
+                      placeholder="Nome da vacina e ano"
+                      className="mt-1 bg-blue-50"
+                    />
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* 15. RASTREAMENTOS */}
+          <div className="space-y-6">
+            <h2 className="text-xl font-bold text-gray-800 border-b pb-2">Rastreamentos</h2>
+            
+            <div className="space-y-4">
+              <h3 className="font-semibold text-gray-700">Colonoscopia</h3>
+              <div>
+                <Label className="text-sm font-medium">Já fez colonoscopia?</Label>
+                <RadioGroup
+                  value={String(formData.colonoscopia || '')}
+                  onValueChange={(value) => updateField('colonoscopia', value)}
+                  className="mt-2 flex flex-row gap-4"
+                >
+                  <div className="flex items-center space-x-2">
+                    <RadioGroupItem value="Não" id="colonoscopia-nao" />
+                    <Label htmlFor="colonoscopia-nao">Não</Label>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <RadioGroupItem value="Sim" id="colonoscopia-sim" />
+                    <Label htmlFor="colonoscopia-sim">Sim</Label>
+                  </div>
+                </RadioGroup>
+              </div>
+              
+              {formData.colonoscopia === 'Sim' && (
+                <div>
+                  <Label className="text-sm font-medium">Ano da última colonoscopia</Label>
+                  <Input
+                    type="number"
+                    value={formData.colonoscopiaAno || ''}
+                    onChange={(e) => updateField('colonoscopiaAno', parseInt(e.target.value) || 0)}
+                    placeholder="Ex: 2022"
+                    className="mt-1 bg-blue-50"
+                  />
+                </div>
+              )}
+            </div>
+          </div>
+
           {/* DECLARAÇÃO FINAL */}
           <div className="space-y-4">
             <h2 className="text-xl font-bold text-gray-800 border-b pb-2">Declaração</h2>
