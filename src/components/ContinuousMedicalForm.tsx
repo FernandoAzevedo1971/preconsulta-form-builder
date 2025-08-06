@@ -361,7 +361,10 @@ export default function ContinuousMedicalForm() {
 
           {/* 2. HISTÓRICO MÉDICO - RESPIRATÓRIO */}
           <div className="space-y-6">
-            <h2 className="text-xl font-bold text-gray-800 border-b pb-2">Histórico Médico - Sistema Respiratório</h2>
+            <div className="border-b pb-2">
+              <h1 className="text-2xl font-bold text-gray-800">Histórico Médico</h1>
+              <h2 className="text-xl font-bold text-gray-800">Sistema Respiratório</h2>
+            </div>
             
             <div className="grid grid-cols-1 gap-6">
               {renderFieldGroup(respiratoryFields)}
