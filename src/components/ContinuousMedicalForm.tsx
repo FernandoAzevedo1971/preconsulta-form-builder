@@ -181,48 +181,183 @@ export default function ContinuousMedicalForm() {
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-8">
+          {/* SEÇÃO LGPD */}
+          <div className="space-y-6">
+            <Card className="border-blue-200 bg-blue-50">
+              <CardContent className="p-6">
+                <div className="flex items-start gap-3">
+                  <div className="h-6 w-6 bg-blue-600 rounded-full flex items-center justify-center mt-1">
+                    <span className="text-white text-sm font-bold">🛡️</span>
+                  </div>
+                  <div>
+                    <h3 className="font-semibold text-blue-900 mb-3">
+                      Lei Geral de Proteção de Dados Pessoais (LGPD)
+                    </h3>
+                    <p className="text-blue-800 leading-relaxed">
+                      Este formulário está em conformidade com a Lei Geral de Proteção de Dados Pessoais 
+                      (Lei nº 13.709/2018). As informações coletadas serão tratadas de forma ética e responsável, 
+                      observando os princípios de transparência, segurança e respeito à privacidade.
+                    </p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="border-amber-200 bg-amber-50">
+              <CardContent className="p-6">
+                <div className="flex items-start gap-3">
+                  <div className="h-6 w-6 bg-amber-600 rounded-full flex items-center justify-center mt-1">
+                    <span className="text-white text-sm font-bold">ℹ️</span>
+                  </div>
+                  <div>
+                    <h3 className="font-semibold text-amber-900 mb-3">
+                      Uso das Informações
+                    </h3>
+                    <p className="text-amber-800 leading-relaxed">
+                      Os dados fornecidos serão utilizados exclusivamente para as finalidades descritas 
+                      neste formulário, e não serão compartilhados com terceiros sem o seu consentimento, 
+                      exceto quando exigido por lei.
+                    </p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="border-green-200 bg-green-50">
+              <CardContent className="p-6">
+                <div className="flex items-start gap-3">
+                  <div className="h-6 w-6 bg-green-600 rounded-full flex items-center justify-center mt-1">
+                    <span className="text-white text-sm font-bold">✓</span>
+                  </div>
+                  <div>
+                    <h3 className="font-semibold text-green-900 mb-3">
+                      Consentimento
+                    </h3>
+                    <p className="text-green-800 leading-relaxed">
+                      Ao preencher este formulário, você declara estar ciente e de acordo com os termos 
+                      de uso e privacidade aqui apresentados.
+                    </p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+
           {/* 1. IDENTIFICAÇÃO */}
           <div className="space-y-6">
             <h2 className="text-xl font-bold text-gray-800 border-b pb-2">Identificação</h2>
             
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <Label htmlFor="nomeCompleto" className="text-sm font-medium">Nome Completo *</Label>
-                <Input id="nomeCompleto" value={formData.nomeCompleto} onChange={e => updateField('nomeCompleto', e.target.value)} placeholder="Digite seu nome completo" className="mt-1" />
-              </div>
-              
-              <div>
-                <Label htmlFor="dataNascimento" className="text-sm font-medium">Data de Nascimento *</Label>
-                <Input id="dataNascimento" type="date" value={formData.dataNascimento} onChange={e => {
-                updateField('dataNascimento', e.target.value);
-                updateField('idade', calculateAge(e.target.value));
-              }} className="mt-1" />
-              </div>
-            </div>
+            <Card className="border-blue-200 bg-blue-50">
+              <CardContent className="p-6">
+                <div className="flex items-center gap-2 mb-4">
+                  <div className="h-5 w-5 bg-blue-600 rounded-full flex items-center justify-center">
+                    <span className="text-white text-xs font-bold">👤</span>
+                  </div>
+                  <h3 className="font-semibold text-blue-900">Informações Pessoais</h3>
+                </div>
+                
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="md:col-span-2">
+                    <Label htmlFor="nomeCompleto" className="text-sm font-medium">
+                      Nome Completo <span className="text-red-500">*</span>
+                    </Label>
+                    <Textarea
+                      id="nomeCompleto"
+                      value={formData.nomeCompleto}
+                      onChange={(e) => updateField('nomeCompleto', e.target.value)}
+                      placeholder="Digite seu nome completo"
+                      className="mt-1"
+                      rows={2}
+                    />
+                  </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <Label htmlFor="dataAtual" className="text-sm font-medium">Data Atual</Label>
-                <Input id="dataAtual" type="date" value={formData.dataAtual} onChange={e => updateField('dataAtual', e.target.value)} className="mt-1" />
-              </div>
-              
-              <div>
-                <Label htmlFor="idade" className="text-sm font-medium">Idade</Label>
-                <Input id="idade" type="number" value={formData.idade} onChange={e => updateField('idade', parseInt(e.target.value) || 0)} className="mt-1" readOnly />
-              </div>
-            </div>
+                  <div>
+                    <Label htmlFor="dataNascimento" className="text-sm font-medium">
+                      Data de Nascimento <span className="text-red-500">*</span>
+                    </Label>
+                    <Input 
+                      id="dataNascimento" 
+                      type="date" 
+                      value={formData.dataNascimento} 
+                      onChange={e => {
+                        updateField('dataNascimento', e.target.value);
+                        updateField('idade', calculateAge(e.target.value));
+                      }} 
+                      className="mt-1" 
+                    />
+                  </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <Label htmlFor="indicacao" className="text-sm font-medium">Indicação</Label>
-                <Input id="indicacao" value={formData.indicacao} onChange={e => updateField('indicacao', e.target.value)} placeholder="Quem indicou este serviço?" className="mt-1" />
-              </div>
-              
-              <div>
-                <Label htmlFor="quemIndicou" className="text-sm font-medium">Quem Indicou</Label>
-                <Input id="quemIndicou" value={formData.quemIndicou} onChange={e => updateField('quemIndicou', e.target.value)} placeholder="Nome de quem indicou" className="mt-1" />
-              </div>
-            </div>
+                  <div>
+                    <Label htmlFor="dataAtual" className="text-sm font-medium">
+                      Data Atual
+                    </Label>
+                    <Input 
+                      id="dataAtual" 
+                      type="date" 
+                      value={formData.dataAtual} 
+                      onChange={e => updateField('dataAtual', e.target.value)} 
+                      className="mt-1" 
+                    />
+                  </div>
+
+                  {formData.idade > 0 && (
+                    <div className="md:col-span-2">
+                      <Label className="text-sm font-medium">Idade Atual</Label>
+                      <div className="mt-1 p-3 bg-gray-50 rounded-md">
+                        <span className="text-lg font-semibold text-blue-600">
+                          {formData.idade} anos
+                        </span>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardContent className="p-6">
+                <h3 className="font-semibold text-gray-900 mb-4">Indicação Médica</h3>
+                
+                <div className="space-y-4">
+                  <div>
+                    <Label htmlFor="indicacao" className="text-sm font-medium">
+                      Quem fez a indicação para o Dr. Fernando Azevedo?
+                    </Label>
+                    <RadioGroup
+                      value={formData.indicacao}
+                      onValueChange={(value) => updateField('indicacao', value)}
+                      className="mt-2"
+                    >
+                      <div className="flex items-center space-x-2">
+                        <RadioGroupItem value="Outro médico" id="medico" />
+                        <Label htmlFor="medico">Outro médico</Label>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <RadioGroupItem value="Parente ou amigo" id="parente" />
+                        <Label htmlFor="parente">Parente ou amigo</Label>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <RadioGroupItem value="Outros" id="outros" />
+                        <Label htmlFor="outros">Outros</Label>
+                      </div>
+                    </RadioGroup>
+                  </div>
+
+                  <div>
+                    <Label htmlFor="quemIndicou" className="text-sm font-medium">
+                      Cite por favor quem indicou:
+                    </Label>
+                    <Input
+                      id="quemIndicou"
+                      value={formData.quemIndicou}
+                      onChange={(e) => updateField('quemIndicou', e.target.value)}
+                      placeholder="Nome de quem fez a indicação"
+                      className="mt-1"
+                    />
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
           </div>
 
           {/* 2. HISTÓRICO MÉDICO - RESPIRATÓRIO */}
