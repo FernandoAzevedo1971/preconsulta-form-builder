@@ -749,14 +749,20 @@ export default function ContinuousMedicalForm() {
                 </RadioGroup>
               </div>
 
-              {formData.fumaAtualmente === 'Sim' && <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {formData.fumaAtualmente === 'Sim' && <div className="space-y-4 bg-blue-50 p-4 rounded-md">
                   <div>
-                    <Label className="text-sm font-medium">Tipo de fumo</Label>
-                    <Input value={formData.tipoFumo} onChange={e => updateField('tipoFumo', e.target.value)} placeholder="Ex: cigarro, cachimbo, charuto" className="mt-1 bg-blue-50" />
+                    <Label className="text-sm font-medium">Com que idade começou a fumar?</Label>
+                    <Input type="number" value={formData.idadeComecouFumar} onChange={e => updateField('idadeComecouFumar', parseInt(e.target.value) || 0)} placeholder="Ex: 18" className="mt-1" />
                   </div>
-                  <div>
-                    <Label className="text-sm font-medium">Cigarros por dia</Label>
-                    <Input type="number" value={formData.cigarrosPorDia} onChange={e => updateField('cigarrosPorDia', parseInt(e.target.value) || 0)} className="mt-1 bg-blue-50" />
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <Label className="text-sm font-medium">Tipo de fumo</Label>
+                      <Input value={formData.tipoFumo} onChange={e => updateField('tipoFumo', e.target.value)} placeholder="Ex: cigarro, cachimbo, charuto" className="mt-1" />
+                    </div>
+                    <div>
+                      <Label className="text-sm font-medium">Cigarros por dia</Label>
+                      <Input type="number" value={formData.cigarrosPorDia} onChange={e => updateField('cigarrosPorDia', parseInt(e.target.value) || 0)} className="mt-1" />
+                    </div>
                   </div>
                 </div>}
 
@@ -772,6 +778,29 @@ export default function ContinuousMedicalForm() {
                       <Label htmlFor="ja-fumou-sim">Sim</Label>
                     </div>
                   </RadioGroup>
+                  
+                  {formData.jaFumou === 'Sim' && <div className="space-y-4 bg-blue-50 p-4 rounded-md mt-4">
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                          <Label className="text-sm font-medium">Com que idade começou a fumar?</Label>
+                          <Input type="number" value={formData.idadeComecouFumarEx} onChange={e => updateField('idadeComecouFumarEx', parseInt(e.target.value) || 0)} placeholder="Ex: 18" className="mt-1" />
+                        </div>
+                        <div>
+                          <Label className="text-sm font-medium">Com que idade parou de fumar?</Label>
+                          <Input type="number" value={formData.idadeParouFumar} onChange={e => updateField('idadeParouFumar', parseInt(e.target.value) || 0)} placeholder="Ex: 35" className="mt-1" />
+                        </div>
+                      </div>
+                      <div>
+                        <Label className="text-sm font-medium">Cigarros por dia (quando fumava)</Label>
+                        <Input type="number" value={formData.cigarrosPorDiaEx} onChange={e => updateField('cigarrosPorDiaEx', parseInt(e.target.value) || 0)} placeholder="Ex: 20" className="mt-1" />
+                      </div>
+                      {formData.idadeComecouFumarEx && formData.idadeParouFumar && formData.cigarrosPorDiaEx && <div className="mt-4 p-3 bg-amber-100 rounded-md">
+                          <Label className="text-sm font-medium">Carga Tabágica:</Label>
+                          <div className="text-lg font-semibold text-amber-800">
+                            {calculateCargaTabagica()} anos-maço
+                          </div>
+                        </div>}
+                    </div>}
                 </div>}
             </div>
 
@@ -939,9 +968,33 @@ export default function ContinuousMedicalForm() {
                 </RadioGroup>
               </div>
               
-              {formData.pneumococcica === 'Sim' && <div>
-                  <Label className="text-sm font-medium">Ano da vacinação</Label>
-                  <Input type="number" value={formData.pneumococcicaAno || ''} onChange={e => updateField('pneumococcicaAno', parseInt(e.target.value) || 0)} placeholder="Ex: 2023" className="mt-1 bg-blue-50" />
+              {formData.pneumococcica === 'Sim' && <div className="space-y-4 bg-blue-50 p-4 rounded-md">
+                  <div>
+                    <Label className="text-sm font-medium">Qual vacina pneumocócica? (pode marcar mais de uma)</Label>
+                    <div className="mt-2 space-y-2">
+                      {['Prevenar13', 'Pneumo15', 'Prevenar20', 'Pneumo23'].map((vacina) => (
+                        <div key={vacina} className="flex items-center space-x-2">
+                          <Checkbox 
+                            id={`pneumo-${vacina}`}
+                            checked={formData.tiposPneumococcica?.includes(vacina) || false}
+                            onCheckedChange={(checked) => {
+                              const current = formData.tiposPneumococcica || [];
+                              if (checked) {
+                                updateField('tiposPneumococcica', [...current, vacina]);
+                              } else {
+                                updateField('tiposPneumococcica', current.filter(t => t !== vacina));
+                              }
+                            }}
+                          />
+                          <Label htmlFor={`pneumo-${vacina}`}>{vacina}</Label>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                  <div>
+                    <Label className="text-sm font-medium">Ano da vacinação</Label>
+                    <Input type="number" value={formData.pneumococcicaAno || ''} onChange={e => updateField('pneumococcicaAno', parseInt(e.target.value) || 0)} placeholder="Ex: 2023" className="mt-1" />
+                  </div>
                 </div>}
             </div>
 

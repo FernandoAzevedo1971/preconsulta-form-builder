@@ -129,12 +129,16 @@ const initialFormData: MedicalFormData = {
 
   // Hábitos Pessoais
   fumaAtualmente: '',
+  idadeComecouFumar: 0,
   tipoFumo: '',
   idadeInicioFumo: 0,
   idadeCessouFumo: 0,
   cessouRecentemente: '',
   jaFumou: '',
+  idadeComecouFumarEx: 0,
+  idadeParouFumar: 0,
   cigarrosPorDia: 0,
+  cigarrosPorDiaEx: 0,
   cargaTabagica: 0,
   tabagismoPassivo: '',
   tabagismoPassivoDetalhes: '',
@@ -164,6 +168,7 @@ const initialFormData: MedicalFormData = {
   covidDoses: '',
   pneumococcica: '',
   pneumococcicaAno: 0,
+  tiposPneumococcica: [],
   outrasVacinas: [],
 
   // Rastreamentos
@@ -217,9 +222,12 @@ export const useMedicalForm = () => {
   const calculateCargaTabagica = useCallback(() => {
     let carga = 0;
     setFormData(prev => {
-      const anos = prev.idadeCessouFumo - prev.idadeInicioFumo;
-      const macosPorDia = prev.cigarrosPorDia / 20;
-      carga = Math.round(anos * macosPorDia);
+      // Para ex-fumantes: usar os campos específicos de ex-fumante
+      if (prev.jaFumou === 'Sim' && prev.idadeComecouFumarEx && prev.idadeParouFumar && prev.cigarrosPorDiaEx) {
+        const anos = prev.idadeParouFumar - prev.idadeComecouFumarEx;
+        const macosPorDia = prev.cigarrosPorDiaEx / 20;
+        carga = Math.round(anos * macosPorDia);
+      }
       
       return { ...prev, cargaTabagica: carga };
     });

@@ -126,12 +126,16 @@ export interface MedicalFormData {
 
   // Hábitos Pessoais
   fumaAtualmente: 'Sim' | 'Não' | '';
+  idadeComecouFumar: number;
   tipoFumo: string;
   idadeInicioFumo: number;
   idadeCessouFumo: number;
   cessouRecentemente: 'Sim' | 'Não' | '';
   jaFumou: 'Sim' | 'Não' | '';
+  idadeComecouFumarEx: number;
+  idadeParouFumar: number;
   cigarrosPorDia: number;
+  cigarrosPorDiaEx: number;
   cargaTabagica: number;
   tabagismoPassivo: 'Sim' | 'Não' | '';
   tabagismoPassivoDetalhes: string;
@@ -161,6 +165,7 @@ export interface MedicalFormData {
   covidDoses: string;
   pneumococcica: 'Sim' | 'Não' | '';
   pneumococcicaAno: number;
+  tiposPneumococcica: string[];
   outrasVacinas: string[];
 
   // Rastreamentos
