@@ -261,13 +261,12 @@ export default function ContinuousMedicalForm() {
                     <Label htmlFor="nomeCompleto" className="text-sm font-medium">
                       Nome Completo <span className="text-red-500">*</span>
                     </Label>
-                    <Textarea
+                    <Input
                       id="nomeCompleto"
                       value={formData.nomeCompleto}
                       onChange={(e) => updateField('nomeCompleto', e.target.value)}
                       placeholder="Digite seu nome completo"
                       className="mt-1"
-                      rows={2}
                     />
                   </div>
 
