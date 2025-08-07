@@ -170,6 +170,7 @@ const initialFormData: MedicalFormData = {
   pneumococcicaAno: 0,
   tiposPneumococcica: [],
   outrasVacinas: [],
+  outrasVacinasTexto: '',
 
   // Rastreamentos
   colonoscopia: '',

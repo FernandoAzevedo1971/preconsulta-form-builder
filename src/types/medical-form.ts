@@ -167,6 +167,7 @@ export interface MedicalFormData {
   pneumococcicaAno: number;
   tiposPneumococcica: string[];
   outrasVacinas: string[];
+  outrasVacinasTexto: string;
 
   // Rastreamentos
   colonoscopia: 'Sim' | 'Não' | '';

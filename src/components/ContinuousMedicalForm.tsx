@@ -1027,16 +1027,18 @@ export default function ContinuousMedicalForm() {
             <div className="space-y-4">
               <h3 className="font-semibold text-gray-700">Outras Vacinas</h3>
               <p className="text-sm text-gray-600">
-                Liste outras vacinas que tomou recentemente
+                Descreva outras vacinas que tomou recentemente
               </p>
               
-              <div className="space-y-3">
-                {Array.from({
-                length: 5
-              }, (_, index) => <div key={index}>
-                    <Label className="text-sm font-medium">Outra vacina {index + 1}</Label>
-                    <Input value={formData.outrasVacinas[index] || ''} onChange={e => updateArrayField('outrasVacinas', index, e.target.value)} placeholder="Nome da vacina e ano" className="mt-1 bg-blue-50" />
-                  </div>)}
+              <div>
+                <Label className="text-sm font-medium">Outras vacinas</Label>
+                <Textarea
+                  value={formData.outrasVacinasTexto || ''}
+                  onChange={(e) => updateField('outrasVacinasTexto', e.target.value)}
+                  placeholder="Liste outras vacinas e seus anos de aplicação"
+                  className="mt-1 bg-blue-50"
+                  rows={3}
+                />
               </div>
             </div>
           </div>
