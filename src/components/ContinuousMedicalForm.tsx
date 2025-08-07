@@ -170,7 +170,7 @@ export default function ContinuousMedicalForm() {
         {formData[item.key] === 'Sim' && <Textarea value={String(formData[item.obsKey as keyof MedicalFormData] || formData[item.listKey as keyof MedicalFormData] || formData[item.key] || '')} onChange={e => {
         const targetKey = item.obsKey || item.listKey || item.key;
         updateField(targetKey as keyof MedicalFormData, e.target.value);
-      }} placeholder={`Descreva detalhes sobre ${item.label.toLowerCase()}`} className="bg-blue-50" rows={2} />}
+      }} placeholder={item.listKey ? "Especifique substâncias e como foi a alergia" : `Descreva detalhes sobre ${item.label.toLowerCase()}`} className="bg-blue-50" rows={2} />}
       </div>);
   };
   return <div className="max-w-4xl mx-auto p-6 space-y-8">
