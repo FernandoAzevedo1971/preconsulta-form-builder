@@ -756,7 +756,10 @@ export default function ContinuousMedicalForm() {
               {formData.fumaAtualmente === 'Sim' && <div className="space-y-4 bg-blue-50 p-4 rounded-md">
                   <div>
                     <Label className="text-sm font-medium">Com que idade começou a fumar?</Label>
-                    <Input type="number" value={formData.idadeComecouFumar} onChange={e => updateField('idadeComecouFumar', parseInt(e.target.value) || 0)} placeholder="Ex: 18" className="mt-1" />
+                    <Input type="number" value={formData.idadeComecouFumar || ''} onChange={e => {
+                      updateField('idadeComecouFumar', e.target.value ? Number(e.target.value) : undefined);
+                      setTimeout(() => calculateCargaTabagica(), 100);
+                    }} placeholder="Ex: 18" className="mt-1" />
                   </div>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
@@ -765,9 +768,18 @@ export default function ContinuousMedicalForm() {
                     </div>
                     <div>
                       <Label className="text-sm font-medium">Cigarros por dia</Label>
-                      <Input type="number" value={formData.cigarrosPorDia} onChange={e => updateField('cigarrosPorDia', parseInt(e.target.value) || 0)} className="mt-1" />
+                       <Input type="number" value={formData.cigarrosPorDia || ''} onChange={e => {
+                         updateField('cigarrosPorDia', e.target.value ? Number(e.target.value) : undefined);
+                         setTimeout(() => calculateCargaTabagica(), 100);
+                       }} className="mt-1" />
                     </div>
                   </div>
+                  {formData.idadeComecouFumar && formData.cigarrosPorDia && <div className="mt-4 p-3 bg-amber-100 rounded-md">
+                      <Label className="text-sm font-medium">Carga Tabágica:</Label>
+                      <div className="text-lg font-semibold text-amber-800">
+                        {formData.cargaTabagica} anos-maço
+                      </div>
+                    </div>}
                 </div>}
 
               {formData.fumaAtualmente === 'Não' && <div>
@@ -787,23 +799,32 @@ export default function ContinuousMedicalForm() {
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
                           <Label className="text-sm font-medium">Com que idade começou a fumar?</Label>
-                          <Input type="number" value={formData.idadeComecouFumarEx} onChange={e => updateField('idadeComecouFumarEx', parseInt(e.target.value) || 0)} placeholder="Ex: 18" className="mt-1" />
+                           <Input type="number" value={formData.idadeComecouFumarEx || ''} onChange={e => {
+                             updateField('idadeComecouFumarEx', e.target.value ? Number(e.target.value) : undefined);
+                             setTimeout(() => calculateCargaTabagica(), 100);
+                           }} placeholder="Ex: 18" className="mt-1" />
                         </div>
                         <div>
                           <Label className="text-sm font-medium">Com que idade parou de fumar?</Label>
-                          <Input type="number" value={formData.idadeParouFumar} onChange={e => updateField('idadeParouFumar', parseInt(e.target.value) || 0)} placeholder="Ex: 35" className="mt-1" />
+                           <Input type="number" value={formData.idadeParouFumar || ''} onChange={e => {
+                             updateField('idadeParouFumar', e.target.value ? Number(e.target.value) : undefined);
+                             setTimeout(() => calculateCargaTabagica(), 100);
+                           }} placeholder="Ex: 35" className="mt-1" />
                         </div>
                       </div>
                       <div>
                         <Label className="text-sm font-medium">Cigarros por dia (quando fumava)</Label>
-                        <Input type="number" value={formData.cigarrosPorDiaEx} onChange={e => updateField('cigarrosPorDiaEx', parseInt(e.target.value) || 0)} placeholder="Ex: 20" className="mt-1" />
+                         <Input type="number" value={formData.cigarrosPorDiaEx || ''} onChange={e => {
+                           updateField('cigarrosPorDiaEx', e.target.value ? Number(e.target.value) : undefined);
+                           setTimeout(() => calculateCargaTabagica(), 100);
+                         }} placeholder="Ex: 20" className="mt-1" />
                       </div>
-                      {formData.idadeComecouFumarEx && formData.idadeParouFumar && formData.cigarrosPorDiaEx && <div className="mt-4 p-3 bg-amber-100 rounded-md">
-                          <Label className="text-sm font-medium">Carga Tabágica:</Label>
-                          <div className="text-lg font-semibold text-amber-800">
-                            {calculateCargaTabagica()} anos-maço
-                          </div>
-                        </div>}
+                       {formData.idadeComecouFumarEx && formData.idadeParouFumar && formData.cigarrosPorDiaEx && <div className="mt-4 p-3 bg-amber-100 rounded-md">
+                           <Label className="text-sm font-medium">Carga Tabágica:</Label>
+                           <div className="text-lg font-semibold text-amber-800">
+                             {formData.cargaTabagica} anos-maço
+                           </div>
+                         </div>}
                     </div>}
                 </div>}
             </div>
