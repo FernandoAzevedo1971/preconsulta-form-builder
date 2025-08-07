@@ -16,6 +16,7 @@ interface FieldGroup {
   label: string;
   obsKey?: keyof MedicalFormData;
   listKey?: keyof MedicalFormData;
+  isAllergy?: boolean;
 }
 export default function ContinuousMedicalForm() {
   const {
@@ -144,15 +145,18 @@ export default function ContinuousMedicalForm() {
   const allergyFields: FieldGroup[] = [{
     key: 'alergiasMedicamentos',
     label: 'Alergias a medicamentos',
-    listKey: 'alergiasMedicamentosLista'
+    listKey: 'alergiasMedicamentosLista',
+    isAllergy: true
   }, {
     key: 'alergiasRespiratorias',
     label: 'Alergias respiratórias',
-    listKey: 'alergiasRespiratoriasLista'
+    listKey: 'alergiasRespiratoriasLista',
+    isAllergy: true
   }, {
     key: 'alergiasAlimentares',
     label: 'Alergias alimentares',
-    listKey: 'alergiasAlimentaresLista'
+    listKey: 'alergiasAlimentaresLista',
+    isAllergy: true
   }];
   const renderFieldGroup = (fields: FieldGroup[]) => {
     return fields.map(item => <div key={String(item.key)} className="space-y-2">
@@ -170,7 +174,7 @@ export default function ContinuousMedicalForm() {
         {formData[item.key] === 'Sim' && <Textarea value={String(formData[item.obsKey as keyof MedicalFormData] || formData[item.listKey as keyof MedicalFormData] || formData[item.key] || '')} onChange={e => {
         const targetKey = item.obsKey || item.listKey || item.key;
         updateField(targetKey as keyof MedicalFormData, e.target.value);
-      }} placeholder={item.listKey ? "Especifique substâncias e como foi a alergia" : `Descreva detalhes sobre ${item.label.toLowerCase()}`} className="bg-blue-50" rows={2} />}
+      }} placeholder={item.isAllergy ? "Especifique substâncias e como foi a alergia" : `Descreva detalhes sobre ${item.label.toLowerCase()}`} className="bg-blue-50" rows={2} />}
       </div>);
   };
   return <div className="max-w-4xl mx-auto p-6 space-y-8">
