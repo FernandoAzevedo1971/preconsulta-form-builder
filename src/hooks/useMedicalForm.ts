@@ -129,16 +129,16 @@ const initialFormData: MedicalFormData = {
 
   // Hábitos Pessoais
   fumaAtualmente: '',
-  idadeComecouFumar: 0,
+  idadeComecouFumar: undefined,
   tipoFumo: '',
-  idadeInicioFumo: 0,
-  idadeCessouFumo: 0,
+  idadeInicioFumo: undefined,
+  idadeCessouFumo: undefined,
   cessouRecentemente: '',
   jaFumou: '',
-  idadeComecouFumarEx: 0,
-  idadeParouFumar: 0,
-  cigarrosPorDia: 0,
-  cigarrosPorDiaEx: 0,
+  idadeComecouFumarEx: undefined,
+  idadeParouFumar: undefined,
+  cigarrosPorDia: undefined,
+  cigarrosPorDiaEx: undefined,
   cargaTabagica: 0,
   tabagismoPassivo: '',
   tabagismoPassivoDetalhes: '',
@@ -222,11 +222,16 @@ export const useMedicalForm = () => {
   const calculateCargaTabagica = useCallback(() => {
     let carga = 0;
     setFormData(prev => {
-      // Para ex-fumantes: usar os campos específicos de ex-fumante
-      if (prev.jaFumou === 'Sim' && prev.idadeComecouFumarEx && prev.idadeParouFumar && prev.cigarrosPorDiaEx) {
+      // Para fumantes atuais
+      if (prev.fumaAtualmente === 'Sim' && prev.idadeComecouFumar && prev.cigarrosPorDia) {
+        const idadeAtual = prev.idade || 0;
+        const anos = idadeAtual - prev.idadeComecouFumar;
+        carga = Math.round((prev.cigarrosPorDia / 20) * anos);
+      }
+      // Para ex-fumantes
+      else if (prev.jaFumou === 'Sim' && prev.idadeComecouFumarEx && prev.idadeParouFumar && prev.cigarrosPorDiaEx) {
         const anos = prev.idadeParouFumar - prev.idadeComecouFumarEx;
-        const macosPorDia = prev.cigarrosPorDiaEx / 20;
-        carga = Math.round(anos * macosPorDia);
+        carga = Math.round((prev.cigarrosPorDiaEx / 20) * anos);
       }
       
       return { ...prev, cargaTabagica: carga };

@@ -126,16 +126,16 @@ export interface MedicalFormData {
 
   // Hábitos Pessoais
   fumaAtualmente: 'Sim' | 'Não' | '';
-  idadeComecouFumar: number;
+  idadeComecouFumar: number | undefined;
   tipoFumo: string;
-  idadeInicioFumo: number;
-  idadeCessouFumo: number;
+  idadeInicioFumo: number | undefined;
+  idadeCessouFumo: number | undefined;
   cessouRecentemente: 'Sim' | 'Não' | '';
   jaFumou: 'Sim' | 'Não' | '';
-  idadeComecouFumarEx: number;
-  idadeParouFumar: number;
-  cigarrosPorDia: number;
-  cigarrosPorDiaEx: number;
+  idadeComecouFumarEx: number | undefined;
+  idadeParouFumar: number | undefined;
+  cigarrosPorDia: number | undefined;
+  cigarrosPorDiaEx: number | undefined;
   cargaTabagica: number;
   tabagismoPassivo: 'Sim' | 'Não' | '';
   tabagismoPassivoDetalhes: string;
