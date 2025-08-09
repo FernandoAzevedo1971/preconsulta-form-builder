@@ -610,12 +610,46 @@ export default function ContinuousMedicalForm() {
             </div>
           </div>
 
+          {/* 12. MEDICAÇÕES ATUAIS */}
+          <div className="space-y-6">
+            <h2 className="text-xl font-bold text-gray-800 border-b pb-2">Medicações Atuais</h2>
+            <p className="text-sm text-gray-600">
+              Liste todas as medicações que você toma atualmente (até 11 medicações)
+            </p>
+            
+            <div className="space-y-4">
+              {Array.from({
+              length: 11
+            }, (_, index) => <div key={index}>
+                  <Label className="text-sm font-medium">Medicação {index + 1}</Label>
+                  <Input value={formData.medicacoes[index] || ''} onChange={e => updateArrayField('medicacoes', index, e.target.value)} placeholder="Nome da medicação, dosagem e frequência" className="mt-1 bg-blue-50" />
+                </div>)}
+            </div>
+          </div>
+
           {/* 9. ALERGIAS */}
           <div className="space-y-6">
             <h2 className="text-xl font-bold text-gray-800 border-b pb-2">Alergias</h2>
             
             <div className="grid grid-cols-1 gap-6">
               {renderFieldGroup(allergyFields)}
+            </div>
+          </div>
+
+          {/* 13. CIRURGIAS PRÉVIAS */}
+          <div className="space-y-6">
+            <h2 className="text-xl font-bold text-gray-800 border-b pb-2">Cirurgias Prévias</h2>
+            <p className="text-sm text-gray-600">
+              Liste as cirurgias que você já realizou (até 6 cirurgias)
+            </p>
+            
+            <div className="space-y-4">
+              {Array.from({
+              length: 6
+            }, (_, index) => <div key={index}>
+                  <Label className="text-sm font-medium">Cirurgia {index + 1}</Label>
+                  <Input value={formData.cirurgias[index] || ''} onChange={e => updateArrayField('cirurgias', index, e.target.value)} placeholder="Tipo de cirurgia, ano e motivo" className="mt-1 bg-blue-50" />
+                </div>)}
             </div>
           </div>
 
@@ -881,40 +915,6 @@ export default function ContinuousMedicalForm() {
                     <Input value={formData.frequenciaSemanal} onChange={e => updateField('frequenciaSemanal', e.target.value)} placeholder="Ex: 3x por semana" className="mt-1 bg-blue-50" />
                   </div>
                 </div>}
-            </div>
-          </div>
-
-          {/* 12. MEDICAÇÕES ATUAIS */}
-          <div className="space-y-6">
-            <h2 className="text-xl font-bold text-gray-800 border-b pb-2">Medicações Atuais</h2>
-            <p className="text-sm text-gray-600">
-              Liste todas as medicações que você toma atualmente (até 11 medicações)
-            </p>
-            
-            <div className="space-y-4">
-              {Array.from({
-              length: 11
-            }, (_, index) => <div key={index}>
-                  <Label className="text-sm font-medium">Medicação {index + 1}</Label>
-                  <Input value={formData.medicacoes[index] || ''} onChange={e => updateArrayField('medicacoes', index, e.target.value)} placeholder="Nome da medicação, dosagem e frequência" className="mt-1 bg-blue-50" />
-                </div>)}
-            </div>
-          </div>
-
-          {/* 13. CIRURGIAS PRÉVIAS */}
-          <div className="space-y-6">
-            <h2 className="text-xl font-bold text-gray-800 border-b pb-2">Cirurgias Prévias</h2>
-            <p className="text-sm text-gray-600">
-              Liste as cirurgias que você já realizou (até 6 cirurgias)
-            </p>
-            
-            <div className="space-y-4">
-              {Array.from({
-              length: 6
-            }, (_, index) => <div key={index}>
-                  <Label className="text-sm font-medium">Cirurgia {index + 1}</Label>
-                  <Input value={formData.cirurgias[index] || ''} onChange={e => updateArrayField('cirurgias', index, e.target.value)} placeholder="Tipo de cirurgia, ano e motivo" className="mt-1 bg-blue-50" />
-                </div>)}
             </div>
           </div>
 
