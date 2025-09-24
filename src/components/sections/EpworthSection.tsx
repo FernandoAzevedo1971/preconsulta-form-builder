@@ -14,21 +14,19 @@ interface EpworthSectionProps {
 }
 
 const epworthQuestions = [
-  { key: 'epworthLendo', label: '1. Sentado e LENDO' },
-  { key: 'epworthTV', label: '2. Sentado e vendo televisão (ou outra tela)' },
-  { key: 'epworthPublico', label: '3. Sentado em lugar público, sem atividades (ex: sala de espera, aulas / palestras, cinema, teatro, igreja, etc.)' },
-  { key: 'epworthTransporte', label: '4. Como passageiro de alguns transporte (carro, metrô, ônibus, etc.), andando por 1 hora sem parar' },
-  { key: 'epworthDescansando', label: '5. Deitado para descansar à tarde' },
-  { key: 'epworthConversando', label: '6. Sentado e conversando com alguém' },
-  { key: 'epworthAposRefeicao', label: '7. Sentado após uma refeição, sem álcool' },
-  { key: 'epworthDirigindo', label: '8. No carro, dirigindo, parado por alguns minutos, durante trânsito' },
+  { key: 'epworthLendo', label: 'Sentado e lendo' },
+  { key: 'epworthTV', label: 'Assistindo TV' },
+  { key: 'epworthPublico', label: 'Sentado, quieto, em um lugar público (por exemplo, em um teatro, reunião ou palestra)' },
+  { key: 'epworthTransporte', label: 'Andando de carro por uma hora sem parar, como passageiro' },
+  { key: 'epworthAposRefeicao', label: 'Sentado quieto após o almoço sem bebida de álcool' },
+  { key: 'epworthTransito', label: 'Em um carro parado no trânsito por alguns minutos' },
 ];
 
 const epworthOptions = [
-  { value: 0, label: 'Nenhuma(0)' },
-  { value: 1, label: 'Pequena(1)' },
-  { value: 2, label: 'Média(2)' },
-  { value: 3, label: 'Alta(3)' },
+  { value: 0, label: 'Nunca cochilaria (0)' },
+  { value: 1, label: 'Pequena probabilidade de cochilar (1)' },
+  { value: 2, label: 'Probabilidade média de cochilar (2)' },
+  { value: 3, label: 'Grande probabilidade de cochilar (3)' },
 ];
 
 export const EpworthSection: React.FC<EpworthSectionProps> = ({
@@ -55,10 +53,14 @@ export const EpworthSection: React.FC<EpworthSectionProps> = ({
             <Brain className="h-5 w-5 text-purple-600" />
             <h3 className="font-semibold text-purple-900">Escala de Sonolência de Epworth</h3>
           </div>
-          <p className="text-purple-800 text-sm">
-            Na últimas 4 semanas, qual possibilidade de você cochilar ou adormecer 
-            (mesmo que de modo muito breve) nas seguintes situações:
-          </p>
+           <p className="text-purple-800 text-sm mb-3">
+             Qual a probabilidade de você cochilar ou dormir, e não apenas se sentir cansado, nas seguintes situações? 
+             Considere o modo de vida que você tem levado recentemente. Mesmo que você não tenha feito algumas destas 
+             coisas recentemente, tente imaginar como elas o afetariam.
+           </p>
+           <p className="text-purple-800 text-sm font-medium">
+             Escolha o número mais apropriado para responder cada questão:
+           </p>
         </CardContent>
       </Card>
 
@@ -67,15 +69,15 @@ export const EpworthSection: React.FC<EpworthSectionProps> = ({
         <CardContent className="p-6">
           <div className="overflow-x-auto">
             <table className="w-full border-collapse">
-              <thead>
-                <tr className="border-b">
-                  <th className="text-left p-3 font-medium">Situação</th>
-                  <th className="text-center p-3 font-medium min-w-[80px]">Nenhuma<br/>(0)</th>
-                  <th className="text-center p-3 font-medium min-w-[80px]">Pequena<br/>(1)</th>
-                  <th className="text-center p-3 font-medium min-w-[80px]">Média<br/>(2)</th>
-                  <th className="text-center p-3 font-medium min-w-[80px]">Alta<br/>(3)</th>
-                </tr>
-              </thead>
+               <thead>
+                 <tr className="border-b">
+                   <th className="text-left p-3 font-medium">Situação</th>
+                   <th className="text-center p-3 font-medium min-w-[60px]">0</th>
+                   <th className="text-center p-3 font-medium min-w-[60px]">1</th>
+                   <th className="text-center p-3 font-medium min-w-[60px]">2</th>
+                   <th className="text-center p-3 font-medium min-w-[60px]">3</th>
+                 </tr>
+               </thead>
               <tbody>
                 {epworthQuestions.map((question) => (
                   <tr key={question.key} className="border-b hover:bg-gray-50">
@@ -117,7 +119,7 @@ export const EpworthSection: React.FC<EpworthSectionProps> = ({
             <div className="text-center p-4 bg-white rounded-lg border">
               <p className="text-sm text-gray-600 mb-2">Pontuação Total</p>
               <p className="text-3xl font-bold text-blue-600">{total}</p>
-              <p className="text-sm text-gray-500">(máximo 24 pontos)</p>
+              <p className="text-sm text-gray-500">(máximo 18 pontos)</p>
             </div>
             
             <div className="text-center p-4 bg-white rounded-lg border">
