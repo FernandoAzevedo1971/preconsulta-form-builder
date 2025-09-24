@@ -5,6 +5,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Slider } from '@/components/ui/slider';
 import { Moon } from 'lucide-react';
+import { EpworthSection } from './EpworthSection';
 
 interface SleepSectionProps {
   formData: any;
@@ -41,6 +42,7 @@ const ConditionalTextarea: React.FC<{
 export const SleepSection: React.FC<SleepSectionProps> = ({
   formData,
   updateField,
+  calculateEpworthTotal,
 }) => {
   const sleepConditions = [
     { 
@@ -182,6 +184,15 @@ export const SleepSection: React.FC<SleepSectionProps> = ({
           </Card>
         ))}
       </div>
+
+      {/* Escala de Sonolência de Epworth - aparece quando "Muito sono durante o dia" é "Sim" */}
+      {formData.sonolienciaDiurna === 'Sim' && (
+        <EpworthSection
+          formData={formData}
+          updateField={updateField}
+          calculateEpworthTotal={calculateEpworthTotal}
+        />
+      )}
     </div>
   );
 };
