@@ -619,11 +619,23 @@ export default function ContinuousMedicalForm() {
             
             <div className="space-y-4">
               {Array.from({
-              length: 11
-            }, (_, index) => <div key={index}>
+                length: Math.min(
+                  11,
+                  formData.medicacoes.findIndex(med => !med || med.trim() === '') === -1
+                    ? 11
+                    : formData.medicacoes.findIndex(med => !med || med.trim() === '') + 1
+                )
+              }, (_, index) => (
+                <div key={index}>
                   <Label className="text-sm font-medium">Medicação {index + 1}</Label>
-                  <Input value={formData.medicacoes[index] || ''} onChange={e => updateArrayField('medicacoes', index, e.target.value)} placeholder="Nome da medicação, dosagem e frequência" className="mt-1 bg-blue-50" />
-                </div>)}
+                  <Input 
+                    value={formData.medicacoes[index] || ''} 
+                    onChange={e => updateArrayField('medicacoes', index, e.target.value)} 
+                    placeholder="Nome da medicação, dosagem e frequência" 
+                    className="mt-1 bg-blue-50" 
+                  />
+                </div>
+              ))}
             </div>
           </div>
 
