@@ -159,6 +159,7 @@ const initialFormData: MedicalFormData = {
 
   // Alimentação
   tipoAlimentacao: '',
+  tipoAlimentacaoEspecificar: '',
 
   // Vacinações
   influenza: '',

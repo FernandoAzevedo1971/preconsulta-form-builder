@@ -155,7 +155,8 @@ export interface MedicalFormData {
   tempoTotalSemanal: string;
 
   // Alimentação
-  tipoAlimentacao: string;
+  tipoAlimentacao: 'sem restrições' | 'restrições parciais' | 'vegana' | '';
+  tipoAlimentacaoEspecificar: string;
 
   // Vacinações
   influenza: 'Sim' | 'Não' | '';
