@@ -35,18 +35,37 @@ export default function ContinuousMedicalForm() {
     }
     setIsSubmitting(true);
     try {
-      const {
-        error
-      } = await supabase.from('medical_forms').insert([{
+      const { data: insertedData, error } = await supabase.from('medical_forms').insert([{
         nome_completo: formData.nomeCompleto,
         data_nascimento: formData.dataNascimento,
         idade: formData.idade,
         indicacao: formData.indicacao,
         quem_indicou: formData.quemIndicou,
         form_data: formData as any
-      }]);
+      }]).select();
+      
       if (error) throw error;
-      toast.success('Formulário enviado com sucesso!');
+      
+      toast.success('Formulário enviado com sucesso! Gerando email...');
+
+      // Send email with form data
+      if (insertedData && insertedData[0]) {
+        try {
+          const pdfResponse = await supabase.functions.invoke('send-medical-form-pdf', {
+            body: { formId: insertedData[0].id }
+          });
+
+          if (pdfResponse.error) {
+            console.error('Error sending email:', pdfResponse.error);
+            toast.error('Formulário salvo, mas erro ao enviar email.');
+          } else {
+            toast.success('Formulário enviado e email enviado para fazevedopneumosono@gmail.com!');
+          }
+        } catch (emailError) {
+          console.error('Error calling email function:', emailError);
+          toast.error('Formulário salvo, mas erro ao enviar email.');
+        }
+      }
     } catch (error) {
       console.error('Erro ao enviar formulário:', error);
       toast.error('Erro ao enviar formulário. Tente novamente.');
