@@ -185,8 +185,8 @@ export const SleepSection: React.FC<SleepSectionProps> = ({
         ))}
       </div>
 
-      {/* Escala de Sonolência de Epworth - aparece quando "Muito sono durante o dia" é "Sim" */}
-      {formData.sonolienciaDiurna === 'Sim' && (
+      {/* Escala de Sonolência de Epworth - aparece quando "Muito sono durante o dia" ou "Roncos" é "Sim" */}
+      {(formData.sonolienciaDiurna === 'Sim' || formData.roncos === 'Sim') && (
         <EpworthSection
           formData={formData}
           updateField={updateField}
