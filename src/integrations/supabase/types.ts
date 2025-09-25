@@ -14,7 +14,42 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      medical_forms: {
+        Row: {
+          created_at: string
+          data_nascimento: string | null
+          form_data: Json
+          id: string
+          idade: number | null
+          indicacao: string | null
+          nome_completo: string
+          quem_indicou: string | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          data_nascimento?: string | null
+          form_data: Json
+          id?: string
+          idade?: number | null
+          indicacao?: string | null
+          nome_completo: string
+          quem_indicou?: string | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          data_nascimento?: string | null
+          form_data?: Json
+          id?: string
+          idade?: number | null
+          indicacao?: string | null
+          nome_completo?: string
+          quem_indicou?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
