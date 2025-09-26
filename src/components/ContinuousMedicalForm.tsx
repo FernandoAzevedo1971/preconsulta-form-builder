@@ -51,9 +51,12 @@ export default function ContinuousMedicalForm() {
       // Send email with form data
       if (insertedData && insertedData[0]) {
         try {
+          console.log('Calling send-medical-form-pdf with formId:', insertedData[0].id);
           const pdfResponse = await supabase.functions.invoke('send-medical-form-pdf', {
             body: { formId: insertedData[0].id }
           });
+
+          console.log('PDF Response:', pdfResponse);
 
           if (pdfResponse.error) {
             console.error('Error sending email:', pdfResponse.error);
@@ -68,6 +71,7 @@ export default function ContinuousMedicalForm() {
       }
     } catch (error) {
       console.error('Erro ao enviar formulário:', error);
+      console.error('Error details:', JSON.stringify(error, null, 2));
       toast.error('Erro ao enviar formulário. Tente novamente.');
     } finally {
       setIsSubmitting(false);
