@@ -18,8 +18,10 @@ const epworthQuestions = [
   { key: 'epworthTV', label: 'Assistindo TV' },
   { key: 'epworthPublico', label: 'Sentado, quieto, em um lugar público (por exemplo, em um teatro, reunião ou palestra)' },
   { key: 'epworthTransporte', label: 'Andando de carro por uma hora sem parar, como passageiro' },
+  { key: 'epworthDescansando', label: 'Descansando na parte da tarde, quando as circunstâncias permitem' },
+  { key: 'epworthConversando', label: 'Sentado conversando com alguém' },
   { key: 'epworthAposRefeicao', label: 'Sentado quieto após o almoço sem bebida de álcool' },
-  { key: 'epworthTransito', label: 'Em um carro parado no trânsito por alguns minutos' },
+  { key: 'epworthDirigindo', label: 'Em um carro parado no trânsito por alguns minutos' },
 ];
 
 const epworthOptions = [
@@ -34,7 +36,7 @@ export const EpworthSection: React.FC<EpworthSectionProps> = ({
   updateField,
   calculateEpworthTotal,
 }) => {
-  const total = calculateEpworthTotal();
+  const total = calculateEpworthTotal ? calculateEpworthTotal() : formData.epworthTotal || 0;
   
   const getScoreInterpretation = (score: number) => {
     if (score <= 5) return { text: 'Normal', color: 'text-green-600' };
@@ -88,15 +90,18 @@ export const EpworthSection: React.FC<EpworthSectionProps> = ({
                     </td>
                     {epworthOptions.map((option) => (
                       <td key={option.value} className="text-center p-3">
-                        <RadioGroup
-                          value={formData[question.key]?.toString() || ''}
-                          onValueChange={(value) => updateField(question.key, parseInt(value))}
-                        >
-                          <RadioGroupItem 
-                            value={option.value.toString()} 
-                            id={`${question.key}-${option.value}`}
-                          />
-                        </RadioGroup>
+                         <RadioGroup
+                           value={formData[question.key] !== null ? formData[question.key].toString() : ''}
+                           onValueChange={(value) => {
+                             updateField(question.key, parseInt(value));
+                             if (calculateEpworthTotal) calculateEpworthTotal();
+                           }}
+                         >
+                           <RadioGroupItem 
+                             value={option.value.toString()} 
+                             id={`${question.key}-${option.value}`}
+                           />
+                         </RadioGroup>
                       </td>
                     ))}
                   </tr>

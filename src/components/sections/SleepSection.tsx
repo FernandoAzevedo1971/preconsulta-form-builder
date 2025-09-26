@@ -47,7 +47,7 @@ export const SleepSection: React.FC<SleepSectionProps> = ({
   const sleepConditions = [
     { 
       key: 'roncos', 
-      label: 'Roncos / Apneia do Sono',
+      label: 'Roncos ou Apneia do Sono',
       observacoes: 'roncosObservacoes',
       placeholder: 'Descreva detalhes sobre roncos ou apneia do sono'
     },

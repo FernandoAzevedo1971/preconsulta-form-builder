@@ -19,6 +19,8 @@ const initialFormData: MedicalFormData = {
   sinusitesObservacoes: '',
   enfisema: '',
   enfisemaObservacoes: '',
+  enfisemaBronquite: '',
+  enfisemaBronquiteObservacoes: '',
   pneumonias: '',
   pneumoniasObservacoes: '',
   tuberculose: '',
@@ -39,14 +41,14 @@ const initialFormData: MedicalFormData = {
   outrosProblemasSonoObservacoes: '',
 
   // Escala de Epworth
-  epworthLendo: 0,
-  epworthTV: 0,
-  epworthPublico: 0,
-  epworthTransporte: 0,
-  epworthDescansando: 0,
-  epworthConversando: 0,
-  epworthAposRefeicao: 0,
-  epworthDirigindo: 0,
+  epworthLendo: null,
+  epworthTV: null,
+  epworthPublico: null,
+  epworthTransporte: null,
+  epworthDescansando: null,
+  epworthConversando: null,
+  epworthAposRefeicao: null,
+  epworthDirigindo: null,
   epworthTotal: 0,
 
   // Cardiovascular
@@ -176,6 +178,13 @@ const initialFormData: MedicalFormData = {
   // Rastreamentos
   colonoscopia: '',
   colonoscopiaAno: 0,
+  mamografia: '',
+  mamografiaAno: 0,
+  exameUrologico: '',
+  exameUrologicoAno: 0,
+
+  // Outros comentários
+  outrosComentarios: '',
 
   // Declaração
   declaracao: false,
@@ -212,9 +221,16 @@ export const useMedicalForm = () => {
   const calculateEpworthTotal = useCallback(() => {
     let total = 0;
     setFormData(prev => {
-      total = prev.epworthLendo + prev.epworthTV + prev.epworthPublico + 
-              prev.epworthTransporte + prev.epworthDescansando + prev.epworthConversando + 
-              prev.epworthAposRefeicao + prev.epworthDirigindo;
+      const scores = [
+        prev.epworthLendo, prev.epworthTV, prev.epworthPublico,
+        prev.epworthTransporte, prev.epworthDescansando, prev.epworthConversando,
+        prev.epworthAposRefeicao, prev.epworthDirigindo
+      ];
+      
+      // Only calculate if all values are selected (not null)
+      if (scores.every(score => score !== null)) {
+        total = scores.reduce((sum, score) => sum + (score || 0), 0);
+      }
       
       return { ...prev, epworthTotal: total };
     });

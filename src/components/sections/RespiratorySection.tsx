@@ -44,7 +44,7 @@ export const RespiratorySection: React.FC<RespiratorySectionProps> = ({
   const respiratoryConditions = [
     { 
       key: 'asma', 
-      label: 'Asma / Bronquite',
+      label: 'Asma ou Bronquite Asmática ("alérgica")',
       observacoes: 'asmaObservacoes',
       placeholder: 'Descreva detalhes sobre asma ou bronquite'
     },
@@ -62,9 +62,15 @@ export const RespiratorySection: React.FC<RespiratorySectionProps> = ({
     },
     { 
       key: 'enfisema', 
-      label: 'Enfisema / DPOC',
+      label: 'Enfisema',
       observacoes: 'enfisemaObservacoes',
-      placeholder: 'Descreva detalhes sobre enfisema/DPOC'
+      placeholder: 'Descreva detalhes sobre enfisema'
+    },
+    { 
+      key: 'enfisemaBronquite', 
+      label: 'Enfisema ou Bronquite Crônica (DPOC)',
+      observacoes: 'enfisemaBronquiteObservacoes',
+      placeholder: 'Descreva detalhes sobre enfisema ou bronquite crônica'
     },
     { 
       key: 'pneumonias', 

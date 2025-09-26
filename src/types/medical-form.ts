@@ -16,6 +16,8 @@ export interface MedicalFormData {
   sinusitesObservacoes: string;
   enfisema: 'Sim' | 'Não' | '';
   enfisemaObservacoes: string;
+  enfisemaBronquite: 'Sim' | 'Não' | '';
+  enfisemaBronquiteObservacoes: string;
   pneumonias: 'Sim' | 'Não' | '';
   pneumoniasObservacoes: string;
   tuberculose: 'Sim' | 'Não' | '';
@@ -36,14 +38,14 @@ export interface MedicalFormData {
   outrosProblemasSonoObservacoes: string;
 
   // Escala de Epworth
-  epworthLendo: number;
-  epworthTV: number;
-  epworthPublico: number;
-  epworthTransporte: number;
-  epworthDescansando: number;
-  epworthConversando: number;
-  epworthAposRefeicao: number;
-  epworthDirigindo: number;
+  epworthLendo: number | null;
+  epworthTV: number | null;
+  epworthPublico: number | null;
+  epworthTransporte: number | null;
+  epworthDescansando: number | null;
+  epworthConversando: number | null;
+  epworthAposRefeicao: number | null;
+  epworthDirigindo: number | null;
   epworthTotal: number;
 
   // Cardiovascular
@@ -173,6 +175,13 @@ export interface MedicalFormData {
   // Rastreamentos
   colonoscopia: 'Sim' | 'Não' | '';
   colonoscopiaAno: number;
+  mamografia: 'Sim' | 'Não' | '';
+  mamografiaAno: number;
+  exameUrologico: 'Sim' | 'Não' | '';
+  exameUrologicoAno: number;
+
+  // Outros comentários
+  outrosComentarios: string;
 
   // Declaração
   declaracao: boolean;

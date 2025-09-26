@@ -51,12 +51,9 @@ export default function ContinuousMedicalForm() {
       // Send email with form data
       if (insertedData && insertedData[0]) {
         try {
-          console.log('Calling send-medical-form-pdf with formId:', insertedData[0].id);
           const pdfResponse = await supabase.functions.invoke('send-medical-form-pdf', {
             body: { formId: insertedData[0].id }
           });
-
-          console.log('PDF Response:', pdfResponse);
 
           if (pdfResponse.error) {
             console.error('Error sending email:', pdfResponse.error);
@@ -71,7 +68,6 @@ export default function ContinuousMedicalForm() {
       }
     } catch (error) {
       console.error('Erro ao enviar formulário:', error);
-      console.error('Error details:', JSON.stringify(error, null, 2));
       toast.error('Erro ao enviar formulário. Tente novamente.');
     } finally {
       setIsSubmitting(false);
@@ -1028,26 +1024,95 @@ export default function ContinuousMedicalForm() {
           <div className="space-y-6">
             <h2 className="text-xl font-bold text-gray-800 border-b pb-2">Rastreamentos</h2>
             
-            <div className="space-y-4">
-              <h3 className="font-semibold text-gray-700">Colonoscopia</h3>
-              <div>
-                <Label className="text-sm font-medium">Já fez colonoscopia?</Label>
-                <RadioGroup value={String(formData.colonoscopia || '')} onValueChange={value => updateField('colonoscopia', value)} className="mt-2 flex flex-row gap-4">
-                  <div className="flex items-center space-x-2">
-                    <RadioGroupItem value="Não" id="colonoscopia-nao" />
-                    <Label htmlFor="colonoscopia-nao">Não</Label>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <RadioGroupItem value="Sim" id="colonoscopia-sim" />
-                    <Label htmlFor="colonoscopia-sim">Sim</Label>
-                  </div>
-                </RadioGroup>
+            {/* Colonoscopia - apenas para 45+ anos */}
+            {formData.idade >= 45 && (
+              <div className="space-y-4">
+                <h3 className="font-semibold text-gray-700">Colonoscopia</h3>
+                <div>
+                  <Label className="text-sm font-medium">Já fez colonoscopia?</Label>
+                  <RadioGroup value={String(formData.colonoscopia || '')} onValueChange={value => updateField('colonoscopia', value)} className="mt-2 flex flex-row gap-4">
+                    <div className="flex items-center space-x-2">
+                      <RadioGroupItem value="Não" id="colonoscopia-nao" />
+                      <Label htmlFor="colonoscopia-nao">Não</Label>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <RadioGroupItem value="Sim" id="colonoscopia-sim" />
+                      <Label htmlFor="colonoscopia-sim">Sim</Label>
+                    </div>
+                  </RadioGroup>
+                </div>
+                
+                {formData.colonoscopia === 'Sim' && <div>
+                    <Label className="text-sm font-medium">Ano da última colonoscopia</Label>
+                    <Input type="number" value={formData.colonoscopiaAno || ''} onChange={e => updateField('colonoscopiaAno', parseInt(e.target.value) || 0)} placeholder="Ex: 2022" className="mt-1 bg-blue-50" />
+                  </div>}
               </div>
-              
-              {formData.colonoscopia === 'Sim' && <div>
-                  <Label className="text-sm font-medium">Ano da última colonoscopia</Label>
-                  <Input type="number" value={formData.colonoscopiaAno || ''} onChange={e => updateField('colonoscopiaAno', parseInt(e.target.value) || 0)} placeholder="Ex: 2022" className="mt-1 bg-blue-50" />
-                </div>}
+            )}
+
+            {/* Mamografia - apenas para mulheres acima de 40 anos */}
+            {formData.idade > 40 && (
+              <div className="space-y-4">
+                <h3 className="font-semibold text-gray-700">Para Mulheres acima de 40 anos</h3>
+                <div>
+                  <Label className="text-sm font-medium">Já realizou Mamografia?</Label>
+                  <RadioGroup value={String(formData.mamografia || '')} onValueChange={value => updateField('mamografia', value)} className="mt-2 flex flex-row gap-4">
+                    <div className="flex items-center space-x-2">
+                      <RadioGroupItem value="Não" id="mamografia-nao" />
+                      <Label htmlFor="mamografia-nao">Não</Label>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <RadioGroupItem value="Sim" id="mamografia-sim" />
+                      <Label htmlFor="mamografia-sim">Sim</Label>
+                    </div>
+                  </RadioGroup>
+                </div>
+                
+                {formData.mamografia === 'Sim' && <div>
+                    <Label className="text-sm font-medium">Ano da última mamografia</Label>
+                    <Input type="number" value={formData.mamografiaAno || ''} onChange={e => updateField('mamografiaAno', parseInt(e.target.value) || 0)} placeholder="Ex: 2023" className="mt-1 bg-blue-50" />
+                  </div>}
+              </div>
+            )}
+
+            {/* Exame Urológico - apenas para homens acima de 50 anos */}
+            {formData.idade > 50 && (
+              <div className="space-y-4">
+                <h3 className="font-semibold text-gray-700">Para Homens acima de 50 anos</h3>
+                <div>
+                  <Label className="text-sm font-medium">Já realizou exame urológico?</Label>
+                  <RadioGroup value={String(formData.exameUrologico || '')} onValueChange={value => updateField('exameUrologico', value)} className="mt-2 flex flex-row gap-4">
+                    <div className="flex items-center space-x-2">
+                      <RadioGroupItem value="Não" id="urologico-nao" />
+                      <Label htmlFor="urologico-nao">Não</Label>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <RadioGroupItem value="Sim" id="urologico-sim" />
+                      <Label htmlFor="urologico-sim">Sim</Label>
+                    </div>
+                  </RadioGroup>
+                </div>
+                
+                {formData.exameUrologico === 'Sim' && <div>
+                    <Label className="text-sm font-medium">Ano do último exame urológico</Label>
+                    <Input type="number" value={formData.exameUrologicoAno || ''} onChange={e => updateField('exameUrologicoAno', parseInt(e.target.value) || 0)} placeholder="Ex: 2023" className="mt-1 bg-blue-50" />
+                  </div>}
+              </div>
+            )}
+          </div>
+
+          {/* 16. OUTROS COMENTÁRIOS */}
+          <div className="space-y-6">
+            <h2 className="text-xl font-bold text-gray-800 border-b pb-2">Outros Comentários que considerar relevantes</h2>
+            
+            <div>
+              <Label className="text-sm font-medium">Comentários adicionais</Label>
+              <Textarea 
+                value={formData.outrosComentarios || ''} 
+                onChange={e => updateField('outrosComentarios', e.target.value)} 
+                placeholder="Descreva qualquer informação adicional que considere relevante para seu histórico médico..." 
+                className="mt-1 bg-blue-50" 
+                rows={4} 
+              />
             </div>
           </div>
 
