@@ -35,7 +35,10 @@ export default function ContinuousMedicalForm() {
     }
     setIsSubmitting(true);
     try {
-      const { data: insertedData, error } = await supabase.from('medical_forms').insert([{
+      const {
+        data: insertedData,
+        error
+      } = await supabase.from('medical_forms').insert([{
         nome_completo: formData.nomeCompleto,
         data_nascimento: formData.dataNascimento,
         idade: formData.idade,
@@ -43,18 +46,17 @@ export default function ContinuousMedicalForm() {
         quem_indicou: formData.quemIndicou,
         form_data: formData as any
       }]).select();
-      
       if (error) throw error;
-      
       toast.success('Formulário enviado com sucesso! Gerando email...');
 
       // Send email with form data
       if (insertedData && insertedData[0]) {
         try {
           const pdfResponse = await supabase.functions.invoke('send-medical-form-pdf', {
-            body: { formId: insertedData[0].id }
+            body: {
+              formId: insertedData[0].id
+            }
           });
-
           if (pdfResponse.error) {
             console.error('Error sending email:', pdfResponse.error);
             toast.error('Formulário salvo, mas erro ao enviar email.');
@@ -199,9 +201,7 @@ export default function ContinuousMedicalForm() {
   return <div className="max-w-4xl mx-auto p-6 space-y-8">
       <Card>
         <CardHeader className="bg-cyan-200">
-          <CardTitle className="text-2xl font-bold text-center text-gray-800">
-            Formulário Médico Completo
-          </CardTitle>
+          <CardTitle className="text-2xl font-bold text-center text-gray-800">Formulário de Pré-Avaliação</CardTitle>
         </CardHeader>
         <CardContent className="space-y-8">
           {/* SEÇÃO LGPD */}
@@ -1025,8 +1025,7 @@ export default function ContinuousMedicalForm() {
             <h2 className="text-xl font-bold text-gray-800 border-b pb-2">Rastreamentos</h2>
             
             {/* Colonoscopia - apenas para 45+ anos */}
-            {formData.idade >= 45 && (
-              <div className="space-y-4">
+            {formData.idade >= 45 && <div className="space-y-4">
                 <h3 className="font-semibold text-gray-700">Colonoscopia</h3>
                 <div>
                   <Label className="text-sm font-medium">Já fez colonoscopia?</Label>
@@ -1046,12 +1045,10 @@ export default function ContinuousMedicalForm() {
                     <Label className="text-sm font-medium">Ano da última colonoscopia</Label>
                     <Input type="number" value={formData.colonoscopiaAno || ''} onChange={e => updateField('colonoscopiaAno', parseInt(e.target.value) || 0)} placeholder="Ex: 2022" className="mt-1 bg-blue-50" />
                   </div>}
-              </div>
-            )}
+              </div>}
 
             {/* Mamografia - apenas para mulheres acima de 40 anos */}
-            {formData.idade > 40 && (
-              <div className="space-y-4">
+            {formData.idade > 40 && <div className="space-y-4">
                 <h3 className="font-semibold text-gray-700">Para Mulheres acima de 40 anos</h3>
                 <div>
                   <Label className="text-sm font-medium">Já realizou Mamografia?</Label>
@@ -1071,12 +1068,10 @@ export default function ContinuousMedicalForm() {
                     <Label className="text-sm font-medium">Ano da última mamografia</Label>
                     <Input type="number" value={formData.mamografiaAno || ''} onChange={e => updateField('mamografiaAno', parseInt(e.target.value) || 0)} placeholder="Ex: 2023" className="mt-1 bg-blue-50" />
                   </div>}
-              </div>
-            )}
+              </div>}
 
             {/* Exame Urológico - apenas para homens acima de 50 anos */}
-            {formData.idade > 50 && (
-              <div className="space-y-4">
+            {formData.idade > 50 && <div className="space-y-4">
                 <h3 className="font-semibold text-gray-700">Para Homens acima de 50 anos</h3>
                 <div>
                   <Label className="text-sm font-medium">Já realizou exame urológico?</Label>
@@ -1096,8 +1091,7 @@ export default function ContinuousMedicalForm() {
                     <Label className="text-sm font-medium">Ano do último exame urológico</Label>
                     <Input type="number" value={formData.exameUrologicoAno || ''} onChange={e => updateField('exameUrologicoAno', parseInt(e.target.value) || 0)} placeholder="Ex: 2023" className="mt-1 bg-blue-50" />
                   </div>}
-              </div>
-            )}
+              </div>}
           </div>
 
           {/* 16. OUTROS COMENTÁRIOS */}
@@ -1106,13 +1100,7 @@ export default function ContinuousMedicalForm() {
             
             <div>
               <Label className="text-sm font-medium">Comentários adicionais</Label>
-              <Textarea 
-                value={formData.outrosComentarios || ''} 
-                onChange={e => updateField('outrosComentarios', e.target.value)} 
-                placeholder="Descreva qualquer informação adicional que considere relevante para seu histórico médico..." 
-                className="mt-1 bg-blue-50" 
-                rows={4} 
-              />
+              <Textarea value={formData.outrosComentarios || ''} onChange={e => updateField('outrosComentarios', e.target.value)} placeholder="Descreva qualquer informação adicional que considere relevante para seu histórico médico..." className="mt-1 bg-blue-50" rows={4} />
             </div>
           </div>
 
