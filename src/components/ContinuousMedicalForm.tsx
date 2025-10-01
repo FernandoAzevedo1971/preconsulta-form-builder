@@ -192,7 +192,7 @@ export default function ContinuousMedicalForm() {
             <Label htmlFor={`${String(item.key)}-sim`}>Sim</Label>
           </div>
         </RadioGroup>
-        {formData[item.key] === 'Sim' && <Textarea value={String(formData[item.obsKey as keyof MedicalFormData] || formData[item.listKey as keyof MedicalFormData] || formData[item.key] || '')} onChange={e => {
+        {formData[item.key] === 'Sim' && <Textarea value={String(formData[item.obsKey as keyof MedicalFormData] || formData[item.listKey as keyof MedicalFormData] || '')} onChange={e => {
         const targetKey = item.obsKey || item.listKey || item.key;
         updateField(targetKey as keyof MedicalFormData, e.target.value);
       }} placeholder={item.isAllergy ? "Especifique substâncias e como foi a alergia" : `Descreva detalhes sobre ${item.label.toLowerCase()}`} className="bg-blue-50" rows={2} />}
