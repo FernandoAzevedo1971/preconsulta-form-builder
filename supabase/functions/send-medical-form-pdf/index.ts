@@ -1,5 +1,6 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.58.0';
+import { PDFDocument, rgb, StandardFonts } from 'https://cdn.skypack.dev/pdf-lib@1.17.1';
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -17,140 +18,154 @@ interface MedicalFormData {
   form_data: any;
 }
 
-const generatePDFContent = (formData: MedicalFormData): string => {
+const generatePDF = async (formData: MedicalFormData): Promise<Uint8Array> => {
   const data = formData.form_data;
   
-  return `
-    <!DOCTYPE html>
-    <html>
-    <head>
-      <meta charset="UTF-8">
-      <title>Formulário Médico - ${formData.nome_completo}</title>
-      <style>
-        body { font-family: Arial, sans-serif; margin: 20px; line-height: 1.4; }
-        .header { text-align: center; margin-bottom: 30px; border-bottom: 2px solid #333; padding-bottom: 20px; }
-        .section { margin-bottom: 25px; page-break-inside: avoid; }
-        .section-title { font-weight: bold; font-size: 18px; margin-bottom: 15px; color: #333; background-color: #f5f5f5; padding: 8px; }
-        .field { margin-bottom: 8px; }
-        .field-label { font-weight: bold; color: #555; }
-        .field-value { margin-left: 10px; }
-        .checkbox-list { margin-left: 15px; }
-        .page-break { page-break-before: always; }
-        .two-column { display: flex; justify-content: space-between; }
-        .column { width: 48%; }
-        @media print { .page-break { page-break-before: always; } }
-      </style>
-    </head>
-    <body>
-      <div class="header">
-        <h1>FORMULÁRIO MÉDICO COMPLETO</h1>
-        <p><strong>Data de preenchimento:</strong> ${new Date().toLocaleDateString('pt-BR')}</p>
-      </div>
-
-      <div class="section">
-        <div class="section-title">DADOS PESSOAIS</div>
-        <div class="field"><span class="field-label">Nome Completo:</span><span class="field-value">${formData.nome_completo}</span></div>
-        <div class="field"><span class="field-label">Data de Nascimento:</span><span class="field-value">${formData.data_nascimento || 'Não informado'}</span></div>
-        <div class="field"><span class="field-label">Idade:</span><span class="field-value">${formData.idade || 'Não informado'} anos</span></div>
-        <div class="field"><span class="field-label">Quem indicou:</span><span class="field-value">${formData.quem_indicou || 'Não informado'}</span></div>
-        <div class="field"><span class="field-label">Tipo de indicação:</span><span class="field-value">${formData.indicacao || 'Não informado'}</span></div>
-      </div>
-
-      <div class="section">
-        <div class="section-title">SISTEMA RESPIRATÓRIO</div>
-        <div class="field"><span class="field-label">Asma:</span><span class="field-value">${data.asma || 'Não informado'}</span></div>
-        ${data.asmaObservacoes ? `<div class="field"><span class="field-label">• Observações Asma:</span><span class="field-value">${data.asmaObservacoes}</span></div>` : ''}
-        <div class="field"><span class="field-label">Rinite alérgica:</span><span class="field-value">${data.rinite || 'Não informado'}</span></div>
-        ${data.riniteObservacoes ? `<div class="field"><span class="field-label">• Observações Rinite:</span><span class="field-value">${data.riniteObservacoes}</span></div>` : ''}
-        <div class="field"><span class="field-label">Sinusites:</span><span class="field-value">${data.sinusites || 'Não informado'}</span></div>
-        ${data.sinusitesObservacoes ? `<div class="field"><span class="field-label">• Observações Sinusites:</span><span class="field-value">${data.sinusitesObservacoes}</span></div>` : ''}
-      </div>
-
-      <div class="section">
-        <div class="section-title">SISTEMA CARDIOVASCULAR</div>
-        <div class="field"><span class="field-label">Hipertensão arterial:</span><span class="field-value">${data.hipertensao || 'Não informado'}</span></div>
-        ${data.hipertensaoObservacoes ? `<div class="field"><span class="field-label">• Observações Hipertensão:</span><span class="field-value">${data.hipertensaoObservacoes}</span></div>` : ''}
-        <div class="field"><span class="field-label">Doença cardíaca:</span><span class="field-value">${data.doencaCardiaca || 'Não informado'}</span></div>
-        ${data.doencaCardiacaObservacoes ? `<div class="field"><span class="field-label">• Observações Doença Cardíaca:</span><span class="field-value">${data.doencaCardiacaObservacoes}</span></div>` : ''}
-      </div>
-
-      <div class="section">
-        <div class="section-title">ESCALA DE SONOLÊNCIA DE EPWORTH</div>
-        <div class="field"><span class="field-label">Pontuação Total:</span><span class="field-value">${data.epworthTotal || 0} pontos</span></div>
-        <div style="margin-left: 20px;">
-          <div class="field">• Lendo sentado: ${data.epworthSentado || 0}</div>
-          <div class="field">• Assistindo TV: ${data.epworthTv || 0}</div>
-          <div class="field">• Sentado em local público: ${data.epworthPublico || 0}</div>
-          <div class="field">• Como passageiro de carro: ${data.epworthPassageiro || 0}</div>
-          <div class="field">• Descansando à tarde: ${data.epworthTarde || 0}</div>
-          <div class="field">• Conversando com alguém: ${data.epworthConversa || 0}</div>
-          <div class="field">• Após almoço sem álcool: ${data.epworthAlmoco || 0}</div>
-          <div class="field">• Em carro parado no trânsito: ${data.epworthTransito || 0}</div>
-        </div>
-      </div>
-
-      <div class="page-break"></div>
-
-      <div class="section">
-        <div class="section-title">HÁBITOS PESSOAIS</div>
-        <div style="margin-bottom: 15px;">
-          <strong>TABAGISMO:</strong>
-          <div class="field"><span class="field-label">Fumante:</span><span class="field-value">${data.fumante || 'Não informado'}</span></div>
-          ${data.anosProduto ? `<div class="field"><span class="field-label">Anos usando produto:</span><span class="field-value">${data.anosProduto}</span></div>` : ''}
-          ${data.cigarrosPorDia ? `<div class="field"><span class="field-label">Cigarros por dia:</span><span class="field-value">${data.cigarrosPorDia}</span></div>` : ''}
-          ${data.cargaTabagica ? `<div class="field"><span class="field-label">Carga Tabágica:</span><span class="field-value">${data.cargaTabagica} anos-maço</span></div>` : ''}
-        </div>
-        
-        <div style="margin-bottom: 15px;">
-          <strong>ÁLCOOL:</strong>
-          <div class="field"><span class="field-label">Consome álcool:</span><span class="field-value">${data.consumeAlcool || 'Não informado'}</span></div>
-          ${data.frequenciaAlcool ? `<div class="field"><span class="field-label">Frequência:</span><span class="field-value">${data.frequenciaAlcool}</span></div>` : ''}
-          ${data.tipoAlcool ? `<div class="field"><span class="field-label">Tipo de bebida:</span><span class="field-value">${data.tipoAlcool}</span></div>` : ''}
-        </div>
-        
-        <div>
-          <strong>ATIVIDADE FÍSICA:</strong>
-          <div class="field"><span class="field-label">Pratica atividade física:</span><span class="field-value">${data.atividadeFisica || 'Não informado'}</span></div>
-          ${data.frequenciaAtividade ? `<div class="field"><span class="field-label">Frequência:</span><span class="field-value">${data.frequenciaAtividade}</span></div>` : ''}
-          ${data.tipoAtividade ? `<div class="field"><span class="field-label">Tipo de atividade:</span><span class="field-value">${data.tipoAtividade}</span></div>` : ''}
-        </div>
-      </div>
-
-      <div class="section">
-        <div class="section-title">MEDICAÇÕES EM USO</div>
-        ${data.medicacao1 || data.medicacao2 || data.medicacao3 || data.medicacao4 || data.medicacao5 ? 
-          '<div style="margin-left: 20px;">' +
-          (data.medicacao1 ? `<div class="field">• ${data.medicacao1}</div>` : '') +
-          (data.medicacao2 ? `<div class="field">• ${data.medicacao2}</div>` : '') +
-          (data.medicacao3 ? `<div class="field">• ${data.medicacao3}</div>` : '') +
-          (data.medicacao4 ? `<div class="field">• ${data.medicacao4}</div>` : '') +
-          (data.medicacao5 ? `<div class="field">• ${data.medicacao5}</div>` : '') +
-          '</div>'
-          : '<div class="field">Nenhuma medicação informada</div>'
-        }
-      </div>
-
-      <div class="section">
-        <div class="section-title">HISTÓRICO DE VACINAÇÕES</div>
-        <div class="field"><span class="field-label">COVID-19:</span><span class="field-value">${data.vacinaCovid || 'Não informado'}</span></div>
-        <div class="field"><span class="field-label">Influenza:</span><span class="field-value">${data.vacinaInfluenza || 'Não informado'}</span></div>
-        <div class="field"><span class="field-label">Pneumocócica:</span><span class="field-value">${data.vacinaPneumococica || 'Não informado'}</span></div>
-      </div>
-
-      <div class="section">
-        <div class="section-title">DECLARAÇÃO LGPD</div>
-        <div class="field">
-          <span class="field-value">${data.declaracao ? '✓ Paciente concordou com os termos da LGPD e autoriza o uso dos dados' : '✗ Consentimento LGPD não registrado'}</span>
-        </div>
-      </div>
-
-      <div style="margin-top: 50px; text-align: center; font-size: 12px; color: #666; border-top: 1px solid #ccc; padding-top: 20px;">
-        <p><strong>Documento gerado automaticamente pelo sistema</strong></p>
-        <p>Data e hora: ${new Date().toLocaleString('pt-BR')}</p>
-      </div>
-    </body>
-    </html>
-  `;
+  // Create a new PDF document
+  const pdfDoc = await PDFDocument.create();
+  const timesRomanFont = await pdfDoc.embedFont(StandardFonts.TimesRoman);
+  const timesRomanBold = await pdfDoc.embedFont(StandardFonts.TimesRomanBold);
+  
+  let page = pdfDoc.addPage([595, 842]); // A4 size
+  const { width, height } = page.getSize();
+  let yPosition = height - 50;
+  const margin = 50;
+  const lineHeight = 15;
+  
+  const addText = (text: string, fontSize: number, font: any, color = rgb(0, 0, 0)) => {
+    if (yPosition < 80) {
+      page = pdfDoc.addPage([595, 842]);
+      yPosition = height - 50;
+    }
+    page.drawText(text, {
+      x: margin,
+      y: yPosition,
+      size: fontSize,
+      font: font,
+      color: color,
+    });
+    yPosition -= lineHeight;
+  };
+  
+  const addSection = (title: string) => {
+    yPosition -= 10;
+    addText(title, 14, timesRomanBold, rgb(0.2, 0.2, 0.2));
+    yPosition -= 5;
+  };
+  
+  const addField = (label: string, value: string) => {
+    const text = `${label}: ${value}`;
+    addText(text, 11, timesRomanFont);
+  };
+  
+  // Header
+  addText('FORMULÁRIO MÉDICO COMPLETO', 18, timesRomanBold);
+  addText(`Data: ${new Date().toLocaleDateString('pt-BR')}`, 11, timesRomanFont);
+  yPosition -= 20;
+  
+  // Dados Pessoais
+  addSection('DADOS PESSOAIS');
+  addField('Nome Completo', formData.nome_completo || 'Não informado');
+  addField('Data de Nascimento', formData.data_nascimento || 'Não informado');
+  addField('Idade', `${formData.idade || 'Não informado'} anos`);
+  addField('Quem indicou', formData.quem_indicou || 'Não informado');
+  addField('Tipo de indicação', formData.indicacao || 'Não informado');
+  
+  // Sistema Respiratório
+  addSection('SISTEMA RESPIRATÓRIO');
+  addField('Asma ou Bronquite Asmática', data.asma || 'Não informado');
+  if (data.asmaObservacoes) addField('  Observações', data.asmaObservacoes);
+  addField('Rinite alérgica', data.rinite || 'Não informado');
+  if (data.riniteObservacoes) addField('  Observações', data.riniteObservacoes);
+  addField('Sinusites', data.sinusites || 'Não informado');
+  if (data.sinusitesObservacoes) addField('  Observações', data.sinusitesObservacoes);
+  addField('Enfisema', data.enfisema || 'Não informado');
+  if (data.enfisemaObservacoes) addField('  Observações', data.enfisemaObservacoes);
+  addField('Enfisema/Bronquite Crônica', data.enfisemaBronquite || 'Não informado');
+  if (data.enfisemaBronquiteObservacoes) addField('  Observações', data.enfisemaBronquiteObservacoes);
+  
+  // Distúrbios do Sono
+  addSection('DISTÚRBIOS DO SONO');
+  addField('Roncos ou Apneia do Sono', data.roncos || 'Não informado');
+  if (data.roncosObservacoes) addField('  Observações', data.roncosObservacoes);
+  addField('Insônia', data.insonia || 'Não informado');
+  if (data.insoniaObservacoes) addField('  Observações', data.insoniaObservacoes);
+  addField('Sonolência Diurna', data.sonolienciaDiurna || 'Não informado');
+  if (data.sonolienciaDiurnaObservacoes) addField('  Observações', data.sonolienciaDiurnaObservacoes);
+  
+  // Escala de Epworth
+  addSection('ESCALA DE SONOLÊNCIA DE EPWORTH');
+  addField('Pontuação Total', `${data.epworthTotal || 0} pontos`);
+  addField('  Lendo sentado', `${data.epworthLendo ?? 'N/A'}`);
+  addField('  Assistindo TV', `${data.epworthTV ?? 'N/A'}`);
+  addField('  Sentado em público', `${data.epworthPublico ?? 'N/A'}`);
+  addField('  Como passageiro', `${data.epworthTransporte ?? 'N/A'}`);
+  addField('  Descansando tarde', `${data.epworthDescansando ?? 'N/A'}`);
+  addField('  Conversando', `${data.epworthConversando ?? 'N/A'}`);
+  addField('  Após refeição', `${data.epworthAposRefeicao ?? 'N/A'}`);
+  addField('  Dirigindo', `${data.epworthDirigindo ?? 'N/A'}`);
+  
+  // Sistema Cardiovascular
+  addSection('SISTEMA CARDIOVASCULAR');
+  addField('Pressão Alta', data.pressaoAlta || 'Não informado');
+  if (data.pressaoAltaObservacoes) addField('  Observações', data.pressaoAltaObservacoes);
+  addField('Colesterol Alto', data.colesterolAlto || 'Não informado');
+  if (data.colesterolAltoObservacoes) addField('  Observações', data.colesterolAltoObservacoes);
+  
+  // Hábitos Pessoais
+  addSection('HÁBITOS PESSOAIS - TABAGISMO');
+  addField('Fuma atualmente', data.fumaAtualmente || 'Não informado');
+  if (data.cargaTabagica) addField('Carga Tabágica', `${data.cargaTabagica} anos-maço`);
+  
+  addSection('ÁLCOOL');
+  addField('Consome álcool', data.consumeAlcool || 'Não informado');
+  if (data.classificacaoConsumo) addField('Classificação', data.classificacaoConsumo);
+  
+  addSection('ATIVIDADE FÍSICA');
+  addField('Pratica atividade física', data.atividadeFisica || 'Não informado');
+  if (data.frequenciaSemanal) addField('Frequência semanal', data.frequenciaSemanal);
+  if (data.tipoAtividade) addField('Tipo', data.tipoAtividade);
+  
+  // Vacinações
+  addSection('VACINAÇÕES');
+  addField('Influenza', data.influenza || 'Não informado');
+  if (data.influenzaAno) addField('  Ano', `${data.influenzaAno}`);
+  addField('COVID-19', data.covid || 'Não informado');
+  if (data.covidAno) addField('  Ano', `${data.covidAno}`);
+  addField('Pneumocócica', data.pneumococcica || 'Não informado');
+  if (data.pneumococcicaAno) addField('  Ano', `${data.pneumococcicaAno}`);
+  
+  // Rastreamentos
+  addSection('RASTREAMENTOS');
+  if (data.colonoscopia) {
+    addField('Colonoscopia', data.colonoscopia);
+    if (data.colonoscopiaAno) addField('  Ano', `${data.colonoscopiaAno}`);
+  }
+  if (data.mamografia) {
+    addField('Mamografia', data.mamografia);
+    if (data.mamografiaAno) addField('  Ano', `${data.mamografiaAno}`);
+  }
+  if (data.exameUrologico) {
+    addField('Exame Urológico', data.exameUrologico);
+    if (data.exameUrologicoAno) addField('  Ano', `${data.exameUrologicoAno}`);
+  }
+  
+  // Outros Comentários
+  if (data.outrosComentarios) {
+    addSection('OUTROS COMENTÁRIOS');
+    addText(data.outrosComentarios, 11, timesRomanFont);
+  }
+  
+  // LGPD
+  addSection('DECLARAÇÃO LGPD');
+  addField('Consentimento', data.declaracao ? 'Sim - Autorizado' : 'Não autorizado');
+  
+  // Footer
+  yPosition = 50;
+  addText('Documento gerado automaticamente', 9, timesRomanFont, rgb(0.5, 0.5, 0.5));
+  addText(`${new Date().toLocaleString('pt-BR')}`, 9, timesRomanFont, rgb(0.5, 0.5, 0.5));
+  
+  return await pdfDoc.save();
 };
 
 const handler = async (req: Request): Promise<Response> => {
@@ -187,8 +202,11 @@ const handler = async (req: Request): Promise<Response> => {
 
     console.log("Form data fetched:", formData.nome_completo);
 
-    // Generate HTML content
-    const htmlContent = generatePDFContent(formData);
+    // Generate PDF
+    console.log("Generating PDF...");
+    const pdfBytes = await generatePDF(formData);
+    const pdfBase64 = btoa(String.fromCharCode(...pdfBytes));
+    console.log("PDF generated successfully");
 
     // Send email using Resend API directly
     const resendApiKey = Deno.env.get("RESEND_API_KEY");
@@ -213,10 +231,14 @@ const handler = async (req: Request): Promise<Response> => {
           <li><strong>Quem indicou:</strong> ${formData.quem_indicou || 'Não informado'}</li>
         </ul>
         
-        <hr>
-        <h3>Dados Completos do Formulário:</h3>
-        ${htmlContent}
+        <p><strong>O formulário completo está anexo em PDF.</strong></p>
       `,
+      attachments: [
+        {
+          filename: `formulario-medico-${formData.nome_completo.replace(/\s+/g, '-')}.pdf`,
+          content: pdfBase64,
+        },
+      ],
     };
 
     const emailResponse = await fetch("https://api.resend.com/emails", {
