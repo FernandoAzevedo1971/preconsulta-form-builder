@@ -20,13 +20,10 @@ export const ConditionalTextarea: React.FC<ConditionalTextareaProps> = ({
 
   return (
     <div className="mt-2">
-      <Label className="text-sm text-muted-foreground">
-        {placeholder}
-      </Label>
       <Textarea
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        placeholder={value ? "" : placeholder}
+        placeholder={placeholder}
         className="mt-1"
       />
     </div>
