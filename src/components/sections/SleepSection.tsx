@@ -27,12 +27,11 @@ const ConditionalTextarea: React.FC<{
   
   return (
     <div className="mt-3 p-3 bg-purple-50 rounded-md border border-purple-200">
-      <Label className="text-sm font-medium text-purple-900">{label}</Label>
       <Textarea
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
-        className="mt-1 bg-white"
+        className="bg-white"
         rows={3}
       />
     </div>
