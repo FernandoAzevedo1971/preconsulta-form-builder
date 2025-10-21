@@ -227,10 +227,8 @@ export const useMedicalForm = () => {
         prev.epworthAposRefeicao, prev.epworthDirigindo
       ];
       
-      // Only calculate if all values are selected (not null)
-      if (scores.every(score => score !== null)) {
-        total = scores.reduce((sum, score) => sum + (score || 0), 0);
-      }
+      // Calculate total from all non-null values
+      total = scores.reduce((sum, score) => sum + (score ?? 0), 0);
       
       return { ...prev, epworthTotal: total };
     });
