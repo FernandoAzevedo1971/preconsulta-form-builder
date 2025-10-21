@@ -36,7 +36,15 @@ export const EpworthSection: React.FC<EpworthSectionProps> = ({
   updateField,
   calculateEpworthTotal,
 }) => {
-  const total = calculateEpworthTotal ? calculateEpworthTotal() : formData.epworthTotal || 0;
+  const handleScoreChange = (field: string, value: number) => {
+    updateField(field, value);
+    // Trigger calculation after state update
+    setTimeout(() => {
+      if (calculateEpworthTotal) calculateEpworthTotal();
+    }, 0);
+  };
+  
+  const total = formData.epworthTotal || 0;
   
   const getScoreInterpretation = (score: number) => {
     if (score <= 5) return { text: 'Normal', color: 'text-green-600' };
@@ -88,22 +96,19 @@ export const EpworthSection: React.FC<EpworthSectionProps> = ({
                         {question.label}
                       </Label>
                     </td>
-                    {epworthOptions.map((option) => (
-                      <td key={option.value} className="text-center p-3">
-                         <RadioGroup
-                           value={formData[question.key] !== null ? formData[question.key].toString() : ''}
-                           onValueChange={(value) => {
-                             updateField(question.key, parseInt(value));
-                             if (calculateEpworthTotal) calculateEpworthTotal();
-                           }}
-                         >
-                           <RadioGroupItem 
-                             value={option.value.toString()} 
-                             id={`${question.key}-${option.value}`}
-                           />
-                         </RadioGroup>
-                      </td>
-                    ))}
+                     {epworthOptions.map((option) => (
+                       <td key={option.value} className="text-center p-3">
+                          <RadioGroup
+                            value={formData[question.key] !== null ? formData[question.key].toString() : ''}
+                            onValueChange={(value) => handleScoreChange(question.key, parseInt(value))}
+                          >
+                            <RadioGroupItem 
+                              value={option.value.toString()} 
+                              id={`${question.key}-${option.value}`}
+                            />
+                          </RadioGroup>
+                       </td>
+                     ))}
                   </tr>
                 ))}
               </tbody>
