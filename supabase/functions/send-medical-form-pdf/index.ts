@@ -177,6 +177,17 @@ const handler = async (req: Request): Promise<Response> => {
 
   try {
     const { formId } = await req.json();
+    
+    // Validate formId format (UUID)
+    const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+    if (!formId || !uuidRegex.test(formId)) {
+      console.log("Invalid form ID format");
+      return new Response(
+        JSON.stringify({ error: 'Invalid form ID format' }),
+        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+    
     console.log("Processing form ID:", formId);
 
     // Create Supabase client
@@ -192,15 +203,15 @@ const handler = async (req: Request): Promise<Response> => {
       .single();
 
     if (error) {
-      console.error("Error fetching form data:", error);
-      throw new Error(`Erro ao buscar dados do formulário: ${error.message}`);
+      console.error("Error fetching form data");
+      throw new Error(`Erro ao buscar dados do formulário`);
     }
 
     if (!formData) {
       throw new Error("Formulário não encontrado");
     }
 
-    console.log("Form data fetched:", formData.nome_completo);
+    console.log("Form data fetched for ID:", formId);
 
     // Generate PDF
     console.log("Generating PDF...");

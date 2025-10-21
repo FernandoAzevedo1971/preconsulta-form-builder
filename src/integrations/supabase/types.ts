@@ -50,6 +50,44 @@ export type Database = {
         }
         Relationships: []
       }
+      medical_forms_audit: {
+        Row: {
+          action: string
+          form_id: string | null
+          id: string
+          ip_address: unknown | null
+          timestamp: string | null
+          user_agent: string | null
+          user_id: string | null
+        }
+        Insert: {
+          action: string
+          form_id?: string | null
+          id?: string
+          ip_address?: unknown | null
+          timestamp?: string | null
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          action?: string
+          form_id?: string | null
+          id?: string
+          ip_address?: unknown | null
+          timestamp?: string | null
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "medical_forms_audit_form_id_fkey"
+            columns: ["form_id"]
+            isOneToOne: false
+            referencedRelation: "medical_forms"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never

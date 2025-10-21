@@ -11,6 +11,8 @@ import { Slider } from '@/components/ui/slider';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { MedicalFormData } from '@/types/medical-form';
+import { medicalFormSchema } from '@/lib/validation';
+import { z } from 'zod';
 interface FieldGroup {
   key: keyof MedicalFormData;
   label: string;
@@ -29,22 +31,21 @@ export default function ContinuousMedicalForm() {
   } = useMedicalForm();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const handleSubmit = async () => {
-    if (!formData.declaracao) {
-      toast.error('É necessário confirmar a declaração para enviar o formulário.');
-      return;
-    }
     setIsSubmitting(true);
     try {
+      // Validate form data
+      const validatedData = medicalFormSchema.parse(formData);
+      
       const {
         data: insertedData,
         error
       } = await supabase.from('medical_forms').insert([{
-        nome_completo: formData.nomeCompleto,
-        data_nascimento: formData.dataNascimento,
-        idade: formData.idade,
-        indicacao: formData.indicacao,
-        quem_indicou: formData.quemIndicou,
-        form_data: formData as any
+        nome_completo: validatedData.nomeCompleto,
+        data_nascimento: validatedData.dataNascimento,
+        idade: validatedData.idade,
+        indicacao: validatedData.indicacao || null,
+        quem_indicou: validatedData.quemIndicou || null,
+        form_data: validatedData
       }]).select();
       if (error) throw error;
       toast.success('Formulário enviado com sucesso! Gerando email...');
@@ -69,8 +70,13 @@ export default function ContinuousMedicalForm() {
         }
       }
     } catch (error) {
-      console.error('Erro ao enviar formulário:', error);
-      toast.error('Erro ao enviar formulário. Tente novamente.');
+      if (error instanceof z.ZodError) {
+        const firstError = error.errors[0];
+        toast.error(`Erro de validação: ${firstError.message}`);
+      } else {
+        console.error('Erro ao enviar formulário:', error);
+        toast.error('Erro ao enviar formulário. Tente novamente.');
+      }
     } finally {
       setIsSubmitting(false);
     }
