@@ -88,30 +88,30 @@ export const EpworthSection: React.FC<EpworthSectionProps> = ({
                    <th className="text-center p-3 font-medium min-w-[60px]">3</th>
                  </tr>
                </thead>
-              <tbody>
-                {epworthQuestions.map((question) => (
-                  <tr key={question.key} className="border-b hover:bg-gray-50">
-                    <td className="p-3">
-                      <Label className="text-sm font-medium">
-                        {question.label}
-                      </Label>
-                    </td>
-                     {epworthOptions.map((option) => (
-                       <td key={option.value} className="text-center p-3">
-                          <RadioGroup
-                            value={formData[question.key] !== null ? formData[question.key].toString() : ''}
-                            onValueChange={(value) => handleScoreChange(question.key, parseInt(value))}
-                          >
-                            <RadioGroupItem 
-                              value={option.value.toString()} 
-                              id={`${question.key}-${option.value}`}
-                            />
-                          </RadioGroup>
-                       </td>
-                     ))}
-                  </tr>
-                ))}
-              </tbody>
+               <tbody>
+                 {epworthQuestions.map((question) => (
+                   <tr key={question.key} className="border-b hover:bg-gray-50">
+                     <td className="p-3">
+                       <Label className="text-sm font-medium">
+                         {question.label}
+                       </Label>
+                     </td>
+                     <RadioGroup
+                       value={formData[question.key] !== null ? formData[question.key].toString() : ''}
+                       onValueChange={(value) => handleScoreChange(question.key, parseInt(value))}
+                     >
+                       {epworthOptions.map((option) => (
+                         <td key={option.value} className="text-center p-3">
+                           <RadioGroupItem 
+                             value={option.value.toString()} 
+                             id={`${question.key}-${option.value}`}
+                           />
+                         </td>
+                       ))}
+                     </RadioGroup>
+                   </tr>
+                 ))}
+               </tbody>
             </table>
           </div>
         </CardContent>
