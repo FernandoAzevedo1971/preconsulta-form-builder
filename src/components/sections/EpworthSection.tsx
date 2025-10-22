@@ -38,8 +38,19 @@ export const EpworthSection: React.FC<EpworthSectionProps> = ({
 }) => {
   // Recalculate total whenever any Epworth field changes
   useEffect(() => {
+    console.log('Epworth values changed:', {
+      epworthLendo: formData.epworthLendo,
+      epworthTV: formData.epworthTV,
+      epworthPublico: formData.epworthPublico,
+      epworthTransporte: formData.epworthTransporte,
+      epworthDescansando: formData.epworthDescansando,
+      epworthConversando: formData.epworthConversando,
+      epworthAposRefeicao: formData.epworthAposRefeicao,
+      epworthDirigindo: formData.epworthDirigindo,
+    });
     if (calculateEpworthTotal) {
-      calculateEpworthTotal();
+      const total = calculateEpworthTotal();
+      console.log('Calculated Epworth total:', total);
     }
   }, [
     formData.epworthLendo,
@@ -54,6 +65,7 @@ export const EpworthSection: React.FC<EpworthSectionProps> = ({
   ]);
 
   const handleScoreChange = (field: string, value: number) => {
+    console.log('Score change:', field, value);
     updateField(field, value);
   };
   
@@ -142,7 +154,7 @@ export const EpworthSection: React.FC<EpworthSectionProps> = ({
             <div className="text-center p-4 bg-white rounded-lg border">
               <p className="text-sm text-gray-600 mb-2">Pontuação Total</p>
               <p className="text-3xl font-bold text-blue-600">{total}</p>
-              <p className="text-sm text-gray-500">(máximo 18 pontos)</p>
+              <p className="text-sm text-gray-500">(máximo 24 pontos)</p>
             </div>
             
             <div className="text-center p-4 bg-white rounded-lg border">
