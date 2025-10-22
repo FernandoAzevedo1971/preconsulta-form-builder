@@ -86,112 +86,114 @@ export const SleepSection: React.FC<SleepSectionProps> = ({
 
       <div className="grid grid-cols-1 gap-6">
         {sleepConditions.map((condition) => (
-          <Card key={condition.key} className="hover:shadow-md transition-shadow">
-            <CardContent className="p-6">
-              <div className="space-y-4">
-                <div>
-                  <Label className="text-sm font-medium text-gray-900">
-                    {condition.label}
-                  </Label>
-                  <RadioGroup
-                    value={formData[condition.key] || ''}
-                    onValueChange={(value) => updateField(condition.key, value)}
-                    className="mt-2"
-                  >
-                    <div className="flex items-center space-x-6">
-                      <div className="flex items-center space-x-2">
-                        <RadioGroupItem value="Não" id={`${condition.key}-nao`} />
-                        <Label htmlFor={`${condition.key}-nao`} className="text-sm">
-                          Não
-                        </Label>
-                      </div>
-                      <div className="flex items-center space-x-2">
-                        <RadioGroupItem value="Sim" id={`${condition.key}-sim`} />
-                        <Label htmlFor={`${condition.key}-sim`} className="text-sm">
-                          Sim
-                        </Label>
-                      </div>
-                    </div>
-                  </RadioGroup>
-                </div>
-
-                {/* Campos específicos para roncos */}
-                {condition.key === 'roncos' && formData[condition.key] === 'Sim' && (
-                  <div className="space-y-4 p-4 bg-purple-50 rounded-md border border-purple-200">
-                    <div>
-                      <Label className="text-sm font-medium text-purple-900">
-                        Roncos são frequentes?
-                      </Label>
-                      <RadioGroup
-                        value={formData.roncosFrequencia || ''}
-                        onValueChange={(value) => updateField('roncosFrequencia', value)}
-                        className="mt-2"
-                      >
+          <React.Fragment key={condition.key}>
+            <Card className="hover:shadow-md transition-shadow">
+              <CardContent className="p-6">
+                <div className="space-y-4">
+                  <div>
+                    <Label className="text-sm font-medium text-gray-900">
+                      {condition.label}
+                    </Label>
+                    <RadioGroup
+                      value={formData[condition.key] || ''}
+                      onValueChange={(value) => updateField(condition.key, value)}
+                      className="mt-2"
+                    >
+                      <div className="flex items-center space-x-6">
                         <div className="flex items-center space-x-2">
-                          <RadioGroupItem value="Todos os dias ou Quase todos os dias" id="frequentes" />
-                          <Label htmlFor="frequentes" className="text-sm">
-                            Todos os dias ou Quase todos os dias
+                          <RadioGroupItem value="Não" id={`${condition.key}-nao`} />
+                          <Label htmlFor={`${condition.key}-nao`} className="text-sm">
+                            Não
                           </Label>
                         </div>
                         <div className="flex items-center space-x-2">
-                          <RadioGroupItem value="< 3x na semana" id="pouco-frequentes" />
-                          <Label htmlFor="pouco-frequentes" className="text-sm">
-                            &lt; 3x na semana
+                          <RadioGroupItem value="Sim" id={`${condition.key}-sim`} />
+                          <Label htmlFor={`${condition.key}-sim`} className="text-sm">
+                            Sim
                           </Label>
-                        </div>
-                        <div className="flex items-center space-x-2">
-                          <RadioGroupItem value="Esporadicos" id="esporadicos" />
-                          <Label htmlFor="esporadicos" className="text-sm">
-                            Esporádicos
-                          </Label>
-                        </div>
-                      </RadioGroup>
-                    </div>
-
-                    <div>
-                      <Label className="text-sm font-medium text-purple-900">
-                        Intensidade do Ronco (0 a 10)
-                      </Label>
-                      <div className="mt-2 px-3">
-                        <Slider
-                          value={[formData.roncosIntensidade || 0]}
-                          onValueChange={(value) => updateField('roncosIntensidade', value[0])}
-                          max={10}
-                          min={0}
-                          step={1}
-                          className="w-full"
-                        />
-                        <div className="flex justify-between text-xs text-gray-500 mt-1">
-                          <span>Muito baixo</span>
-                          <span className="font-medium">{formData.roncosIntensidade || 0}</span>
-                          <span>Muito alto</span>
                         </div>
                       </div>
-                    </div>
+                    </RadioGroup>
                   </div>
-                )}
 
-                <ConditionalTextarea
-                  condition={formData[condition.key] === 'Sim'}
-                  label={`Fale mais sobre ${condition.label}`}
-                  value={formData[condition.observacoes] || ''}
-                  onChange={(value) => updateField(condition.observacoes, value)}
-                  placeholder={condition.placeholder}
-                />
-              </div>
-            </CardContent>
-          </Card>
+                  {/* Campos específicos para roncos */}
+                  {condition.key === 'roncos' && formData[condition.key] === 'Sim' && (
+                    <div className="space-y-4 p-4 bg-purple-50 rounded-md border border-purple-200">
+                      <div>
+                        <Label className="text-sm font-medium text-purple-900">
+                          Roncos são frequentes?
+                        </Label>
+                        <RadioGroup
+                          value={formData.roncosFrequencia || ''}
+                          onValueChange={(value) => updateField('roncosFrequencia', value)}
+                          className="mt-2"
+                        >
+                          <div className="flex items-center space-x-2">
+                            <RadioGroupItem value="Todos os dias ou Quase todos os dias" id="frequentes" />
+                            <Label htmlFor="frequentes" className="text-sm">
+                              Todos os dias ou Quase todos os dias
+                            </Label>
+                          </div>
+                          <div className="flex items-center space-x-2">
+                            <RadioGroupItem value="< 3x na semana" id="pouco-frequentes" />
+                            <Label htmlFor="pouco-frequentes" className="text-sm">
+                              &lt; 3x na semana
+                            </Label>
+                          </div>
+                          <div className="flex items-center space-x-2">
+                            <RadioGroupItem value="Esporadicos" id="esporadicos" />
+                            <Label htmlFor="esporadicos" className="text-sm">
+                              Esporádicos
+                            </Label>
+                          </div>
+                        </RadioGroup>
+                      </div>
+
+                      <div>
+                        <Label className="text-sm font-medium text-purple-900">
+                          Intensidade do Ronco (0 a 10)
+                        </Label>
+                        <div className="mt-2 px-3">
+                          <Slider
+                            value={[formData.roncosIntensidade || 0]}
+                            onValueChange={(value) => updateField('roncosIntensidade', value[0])}
+                            max={10}
+                            min={0}
+                            step={1}
+                            className="w-full"
+                          />
+                          <div className="flex justify-between text-xs text-gray-500 mt-1">
+                            <span>Muito baixo</span>
+                            <span className="font-medium">{formData.roncosIntensidade || 0}</span>
+                            <span>Muito alto</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  <ConditionalTextarea
+                    condition={formData[condition.key] === 'Sim'}
+                    label={`Fale mais sobre ${condition.label}`}
+                    value={formData[condition.observacoes] || ''}
+                    onChange={(value) => updateField(condition.observacoes, value)}
+                    placeholder={condition.placeholder}
+                  />
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Escala de Sonolência de Epworth - aparece após "Muito sono durante o dia" quando é "Sim" */}
+            {condition.key === 'sonolienciaDiurna' && formData.sonolienciaDiurna === 'Sim' && (
+              <EpworthSection
+                formData={formData}
+                updateField={updateField}
+                calculateEpworthTotal={calculateEpworthTotal}
+              />
+            )}
+          </React.Fragment>
         ))}
       </div>
-
-      {/* Escala de Sonolência de Epworth - aparece quando "Muito sono durante o dia" ou "Roncos" é "Sim" */}
-      {(formData.sonolienciaDiurna === 'Sim' || formData.roncos === 'Sim') && (
-        <EpworthSection
-          formData={formData}
-          updateField={updateField}
-          calculateEpworthTotal={calculateEpworthTotal}
-        />
-      )}
     </div>
   );
 };
