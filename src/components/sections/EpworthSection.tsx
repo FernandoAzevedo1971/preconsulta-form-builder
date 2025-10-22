@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
@@ -36,12 +36,25 @@ export const EpworthSection: React.FC<EpworthSectionProps> = ({
   updateField,
   calculateEpworthTotal,
 }) => {
+  // Recalculate total whenever any Epworth field changes
+  useEffect(() => {
+    if (calculateEpworthTotal) {
+      calculateEpworthTotal();
+    }
+  }, [
+    formData.epworthLendo,
+    formData.epworthTV,
+    formData.epworthPublico,
+    formData.epworthTransporte,
+    formData.epworthDescansando,
+    formData.epworthConversando,
+    formData.epworthAposRefeicao,
+    formData.epworthDirigindo,
+    calculateEpworthTotal
+  ]);
+
   const handleScoreChange = (field: string, value: number) => {
     updateField(field, value);
-    // Trigger calculation after state update
-    setTimeout(() => {
-      if (calculateEpworthTotal) calculateEpworthTotal();
-    }, 0);
   };
   
   const total = formData.epworthTotal || 0;
