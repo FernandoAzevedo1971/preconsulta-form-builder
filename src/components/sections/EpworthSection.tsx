@@ -38,19 +38,8 @@ export const EpworthSection: React.FC<EpworthSectionProps> = ({
 }) => {
   // Recalculate total whenever any Epworth field changes
   useEffect(() => {
-    console.log('Epworth values changed:', {
-      epworthLendo: formData.epworthLendo,
-      epworthTV: formData.epworthTV,
-      epworthPublico: formData.epworthPublico,
-      epworthTransporte: formData.epworthTransporte,
-      epworthDescansando: formData.epworthDescansando,
-      epworthConversando: formData.epworthConversando,
-      epworthAposRefeicao: formData.epworthAposRefeicao,
-      epworthDirigindo: formData.epworthDirigindo,
-    });
     if (calculateEpworthTotal) {
-      const total = calculateEpworthTotal();
-      console.log('Calculated Epworth total:', total);
+      calculateEpworthTotal();
     }
   }, [
     formData.epworthLendo,
@@ -65,7 +54,6 @@ export const EpworthSection: React.FC<EpworthSectionProps> = ({
   ]);
 
   const handleScoreChange = (field: string, value: number) => {
-    console.log('Score change:', field, value);
     updateField(field, value);
   };
   
