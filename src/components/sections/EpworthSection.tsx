@@ -112,12 +112,14 @@ export const EpworthSection: React.FC<EpworthSectionProps> = ({
                      <RadioGroup
                        value={formData[question.key] !== null ? formData[question.key].toString() : ''}
                        onValueChange={(value) => handleScoreChange(question.key, parseInt(value))}
+                       className="contents"
                      >
                        {epworthOptions.map((option) => (
                          <td key={option.value} className="text-center p-3">
                            <RadioGroupItem 
                              value={option.value.toString()} 
                              id={`${question.key}-${option.value}`}
+                             className="mx-auto"
                            />
                          </td>
                        ))}
