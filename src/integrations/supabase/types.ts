@@ -14,7 +14,80 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      medical_forms: {
+        Row: {
+          created_at: string
+          data_nascimento: string | null
+          form_data: Json
+          id: string
+          idade: number | null
+          indicacao: string | null
+          nome_completo: string
+          quem_indicou: string | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          data_nascimento?: string | null
+          form_data: Json
+          id?: string
+          idade?: number | null
+          indicacao?: string | null
+          nome_completo: string
+          quem_indicou?: string | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          data_nascimento?: string | null
+          form_data?: Json
+          id?: string
+          idade?: number | null
+          indicacao?: string | null
+          nome_completo?: string
+          quem_indicou?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      medical_forms_audit: {
+        Row: {
+          action: string
+          form_id: string | null
+          id: string
+          ip_address: unknown
+          timestamp: string | null
+          user_agent: string | null
+          user_id: string | null
+        }
+        Insert: {
+          action: string
+          form_id?: string | null
+          id?: string
+          ip_address?: unknown
+          timestamp?: string | null
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          action?: string
+          form_id?: string | null
+          id?: string
+          ip_address?: unknown
+          timestamp?: string | null
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "medical_forms_audit_form_id_fkey"
+            columns: ["form_id"]
+            isOneToOne: false
+            referencedRelation: "medical_forms"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
