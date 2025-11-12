@@ -55,6 +55,12 @@ export const EpworthSection: React.FC<EpworthSectionProps> = ({
 
   const handleScoreChange = (field: string, value: number) => {
     updateField(field, value);
+    // Trigger recalculation after state update
+    setTimeout(() => {
+      if (calculateEpworthTotal) {
+        calculateEpworthTotal();
+      }
+    }, 0);
   };
   
   const total = formData.epworthTotal || 0;
