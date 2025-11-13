@@ -195,7 +195,24 @@ export const useMedicalForm = () => {
   const [currentSection, setCurrentSection] = useState(0);
 
   const updateField = useCallback((field: keyof MedicalFormData, value: any) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
+    setFormData(prev => {
+      const updated = { ...prev, [field]: value };
+      
+      // Auto-calculate Epworth total when any Epworth field changes
+      if (field.toString().startsWith('epworth') && field !== 'epworthTotal') {
+        const epworthFields = [
+          'epworthLendo', 'epworthTV', 'epworthPublico', 'epworthTransporte',
+          'epworthDescansando', 'epworthConversando', 'epworthAposRefeicao', 'epworthDirigindo'
+        ];
+        const total = epworthFields.reduce((sum, key) => {
+          const val = key === field ? value : updated[key as keyof MedicalFormData];
+          return sum + (val ?? 0);
+        }, 0);
+        updated.epworthTotal = total;
+      }
+      
+      return updated;
+    });
   }, []);
 
   const updateArrayField = useCallback((field: keyof MedicalFormData, index: number, value: string) => {
