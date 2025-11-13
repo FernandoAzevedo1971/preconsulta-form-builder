@@ -182,11 +182,11 @@ export const medicalFormSchema = z.object({
   
   // Rastreamentos
   colonoscopia: z.enum(['Sim', 'Não', '']).optional(),
-  colonoscopiaAno: z.number().min(1900).max(2100).optional(),
+  colonoscopiaAno: z.number().nullable().optional(),
   mamografia: z.enum(['Sim', 'Não', '']).optional(),
-  mamografiaAno: z.number().min(1900).max(2100).optional(),
+  mamografiaAno: z.number().nullable().optional(),
   exameUrologico: z.enum(['Sim', 'Não', '']).optional(),
-  exameUrologicoAno: z.number().min(1900).max(2100).optional(),
+  exameUrologicoAno: z.number().nullable().optional(),
   
   // Outros comentários
   outrosComentarios: z.string().max(2000).optional(),
