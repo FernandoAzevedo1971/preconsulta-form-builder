@@ -170,12 +170,12 @@ export const medicalFormSchema = z.object({
   
   // Vacinações
   influenza: z.enum(['Sim', 'Não', '']).optional(),
-  influenzaAno: z.number().min(1900).max(2100).nullable().optional(),
+  influenzaAno: z.number().nullable().optional(),
   covid: z.enum(['Sim', 'Não', '']).optional(),
-  covidAno: z.number().min(2019).max(2100).nullable().optional(),
+  covidAno: z.number().nullable().optional(),
   covidDoses: z.string().max(100).optional(),
   pneumococcica: z.enum(['Sim', 'Não', '']).optional(),
-  pneumococcicaAno: z.number().min(1900).max(2100).nullable().optional(),
+  pneumococcicaAno: z.number().nullable().optional(),
   tiposPneumococcica: z.array(z.string().max(100)).optional(),
   outrasVacinas: z.array(z.string().max(100)).optional(),
   outrasVacinasTexto: z.string().max(500).optional(),
