@@ -72,7 +72,12 @@ export default function ContinuousMedicalForm() {
     } catch (error) {
       if (error instanceof z.ZodError) {
         const firstError = error.errors[0];
-        toast.error(`Erro de validação: ${firstError.message}`);
+        console.error('Validation error details:', {
+          path: firstError.path,
+          message: firstError.message,
+          value: firstError.path.reduce((obj, key) => obj?.[key as keyof typeof obj], formData as any)
+        });
+        toast.error(`Erro de validação no campo "${firstError.path.join('.')}": ${firstError.message}`);
       } else {
         console.error('Erro ao enviar formulário:', error);
         toast.error('Erro ao enviar formulário. Tente novamente.');
