@@ -937,7 +937,7 @@ export default function ContinuousMedicalForm() {
                 
                 {formData.influenza === 'Sim' && <div>
                     <Label className="text-sm font-medium">Ano da última dose</Label>
-                    <Input type="number" value={formData.influenzaAno || ''} onChange={e => updateField('influenzaAno', parseInt(e.target.value) || 0)} placeholder="Ex: 2024" className="mt-1 bg-blue-50" />
+                    <Input type="number" value={formData.influenzaAno || ''} onChange={e => updateField('influenzaAno', e.target.value ? parseInt(e.target.value) : null)} placeholder="Ex: 2024" className="mt-1 bg-blue-50" />
                   </div>}
               </div>
 
@@ -961,7 +961,7 @@ export default function ContinuousMedicalForm() {
                 {formData.covid === 'Sim' && <div className="space-y-3">
                     <div>
                       <Label className="text-sm font-medium">Ano da última dose</Label>
-                      <Input type="number" value={formData.covidAno || ''} onChange={e => updateField('covidAno', parseInt(e.target.value) || 0)} placeholder="Ex: 2024" className="mt-1 bg-blue-50" />
+                      <Input type="number" value={formData.covidAno || ''} onChange={e => updateField('covidAno', e.target.value ? parseInt(e.target.value) : null)} placeholder="Ex: 2024" className="mt-1 bg-blue-50" />
                     </div>
                     <div>
                       <Label className="text-sm font-medium">Quantas doses tomou?</Label>
@@ -1007,7 +1007,7 @@ export default function ContinuousMedicalForm() {
                   </div>
                   <div>
                     <Label className="text-sm font-medium">Ano da vacinação</Label>
-                    <Input type="number" value={formData.pneumococcicaAno || ''} onChange={e => updateField('pneumococcicaAno', parseInt(e.target.value) || 0)} placeholder="Ex: 2023" className="mt-1" />
+                    <Input type="number" value={formData.pneumococcicaAno || ''} onChange={e => updateField('pneumococcicaAno', e.target.value ? parseInt(e.target.value) : null)} placeholder="Ex: 2023" className="mt-1" />
                   </div>
                 </div>}
             </div>
@@ -1049,7 +1049,7 @@ export default function ContinuousMedicalForm() {
                 
                 {formData.colonoscopia === 'Sim' && <div>
                     <Label className="text-sm font-medium">Ano da última colonoscopia</Label>
-                    <Input type="number" value={formData.colonoscopiaAno || ''} onChange={e => updateField('colonoscopiaAno', parseInt(e.target.value) || 0)} placeholder="Ex: 2022" className="mt-1 bg-blue-50" />
+                    <Input type="number" value={formData.colonoscopiaAno || ''} onChange={e => updateField('colonoscopiaAno', e.target.value ? parseInt(e.target.value) : null)} placeholder="Ex: 2022" className="mt-1 bg-blue-50" />
                   </div>}
               </div>}
 
@@ -1072,7 +1072,7 @@ export default function ContinuousMedicalForm() {
                 
                 {formData.mamografia === 'Sim' && <div>
                     <Label className="text-sm font-medium">Ano da última mamografia</Label>
-                    <Input type="number" value={formData.mamografiaAno || ''} onChange={e => updateField('mamografiaAno', parseInt(e.target.value) || 0)} placeholder="Ex: 2023" className="mt-1 bg-blue-50" />
+                    <Input type="number" value={formData.mamografiaAno || ''} onChange={e => updateField('mamografiaAno', e.target.value ? parseInt(e.target.value) : null)} placeholder="Ex: 2023" className="mt-1 bg-blue-50" />
                   </div>}
               </div>}
 
@@ -1095,7 +1095,7 @@ export default function ContinuousMedicalForm() {
                 
                 {formData.exameUrologico === 'Sim' && <div>
                     <Label className="text-sm font-medium">Ano do último exame urológico</Label>
-                    <Input type="number" value={formData.exameUrologicoAno || ''} onChange={e => updateField('exameUrologicoAno', parseInt(e.target.value) || 0)} placeholder="Ex: 2023" className="mt-1 bg-blue-50" />
+                    <Input type="number" value={formData.exameUrologicoAno || ''} onChange={e => updateField('exameUrologicoAno', e.target.value ? parseInt(e.target.value) : null)} placeholder="Ex: 2023" className="mt-1 bg-blue-50" />
                   </div>}
               </div>}
           </div>

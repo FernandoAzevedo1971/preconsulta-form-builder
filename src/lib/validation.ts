@@ -38,7 +38,7 @@ export const medicalFormSchema = z.object({
   
   roncos: z.enum(['Sim', 'Não', '']).optional(),
   roncosFrequencia: z.string().max(200).optional(),
-  roncosIntensidade: z.number().min(0).max(10).optional(),
+  roncosIntensidade: z.number().min(0).max(10).nullable().optional(),
   roncosObservacoes: z.string().max(1000).optional(),
   insonia: z.enum(['Sim', 'Não', '']).optional(),
   insoniaObservacoes: z.string().max(1000).optional(),
@@ -56,7 +56,7 @@ export const medicalFormSchema = z.object({
   epworthConversando: z.number().min(0).max(3).nullable().optional(),
   epworthAposRefeicao: z.number().min(0).max(3).nullable().optional(),
   epworthDirigindo: z.number().min(0).max(3).nullable().optional(),
-  epworthTotal: z.number().min(0).max(24).optional(),
+  epworthTotal: z.number().min(0).max(24).nullable().optional(),
   
   // Cardiovascular
   pressaoAlta: z.enum(['Sim', 'Não', '']).optional(),
@@ -136,17 +136,17 @@ export const medicalFormSchema = z.object({
   
   // Hábitos Pessoais
   fumaAtualmente: z.enum(['Sim', 'Não', '']).optional(),
-  idadeComecouFumar: z.number().min(0).max(150).optional(),
+  idadeComecouFumar: z.number().min(0).max(150).nullable().optional(),
   tipoFumo: z.string().max(100).optional(),
-  idadeInicioFumo: z.number().min(0).max(150).optional(),
-  idadeCessouFumo: z.number().min(0).max(150).optional(),
+  idadeInicioFumo: z.number().min(0).max(150).nullable().optional(),
+  idadeCessouFumo: z.number().min(0).max(150).nullable().optional(),
   cessouRecentemente: z.enum(['Sim', 'Não', '']).optional(),
   jaFumou: z.enum(['Sim', 'Não', '']).optional(),
-  idadeComecouFumarEx: z.number().min(0).max(150).optional(),
-  idadeParouFumar: z.number().min(0).max(150).optional(),
-  cigarrosPorDia: z.number().min(0).max(200).optional(),
-  cigarrosPorDiaEx: z.number().min(0).max(200).optional(),
-  cargaTabagica: z.number().min(0).optional(),
+  idadeComecouFumarEx: z.number().min(0).max(150).nullable().optional(),
+  idadeParouFumar: z.number().min(0).max(150).nullable().optional(),
+  cigarrosPorDia: z.number().min(0).max(200).nullable().optional(),
+  cigarrosPorDiaEx: z.number().min(0).max(200).nullable().optional(),
+  cargaTabagica: z.number().min(0).nullable().optional(),
   tabagismoPassivo: z.enum(['Sim', 'Não', '']).optional(),
   tabagismoPassivoDetalhes: z.string().max(500).optional(),
   
