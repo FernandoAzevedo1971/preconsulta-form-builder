@@ -31,7 +31,7 @@ const initialFormData: MedicalFormData = {
   // Distúrbios do Sono
   roncos: '',
   roncosFrequencia: '',
-  roncosIntensidade: 0,
+  roncosIntensidade: null,
   roncosObservacoes: '',
   insonia: '',
   insoniaObservacoes: '',
@@ -49,7 +49,7 @@ const initialFormData: MedicalFormData = {
   epworthConversando: null,
   epworthAposRefeicao: null,
   epworthDirigindo: null,
-  epworthTotal: 0,
+  epworthTotal: null,
 
   // Cardiovascular
   pressaoAlta: '',
@@ -141,7 +141,7 @@ const initialFormData: MedicalFormData = {
   idadeParouFumar: undefined,
   cigarrosPorDia: undefined,
   cigarrosPorDiaEx: undefined,
-  cargaTabagica: 0,
+  cargaTabagica: null,
   tabagismoPassivo: '',
   tabagismoPassivoDetalhes: '',
 
@@ -165,23 +165,23 @@ const initialFormData: MedicalFormData = {
 
   // Vacinações
   influenza: '',
-  influenzaAno: 0,
+  influenzaAno: null,
   covid: '',
-  covidAno: 0,
+  covidAno: null,
   covidDoses: '',
   pneumococcica: '',
-  pneumococcicaAno: 0,
+  pneumococcicaAno: null,
   tiposPneumococcica: [],
   outrasVacinas: [],
   outrasVacinasTexto: '',
 
   // Rastreamentos
   colonoscopia: '',
-  colonoscopiaAno: 0,
+  colonoscopiaAno: null,
   mamografia: '',
-  mamografiaAno: 0,
+  mamografiaAno: null,
   exameUrologico: '',
-  exameUrologicoAno: 0,
+  exameUrologicoAno: null,
 
   // Outros comentários
   outrosComentarios: '',
