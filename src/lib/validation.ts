@@ -9,9 +9,7 @@ export const medicalFormSchema = z.object({
     .max(200, 'Nome não pode exceder 200 caracteres'),
   dataNascimento: z.string()
     .regex(/^\d{4}-\d{2}-\d{2}$/, 'Data deve estar no formato YYYY-MM-DD'),
-  idade: z.number()
-    .min(0, 'Idade não pode ser negativa')
-    .max(150, 'Idade deve ser menor que 150'),
+  idade: z.number(),
   
   // Optional fields with validation
   dataAtual: z.string().optional(),
@@ -38,7 +36,7 @@ export const medicalFormSchema = z.object({
   
   roncos: z.enum(['Sim', 'Não', '']).optional(),
   roncosFrequencia: z.string().max(200).optional(),
-  roncosIntensidade: z.number().min(0).max(10).nullable().optional(),
+  roncosIntensidade: z.number().nullable().optional(),
   roncosObservacoes: z.string().max(1000).optional(),
   insonia: z.enum(['Sim', 'Não', '']).optional(),
   insoniaObservacoes: z.string().max(1000).optional(),
@@ -48,15 +46,15 @@ export const medicalFormSchema = z.object({
   outrosProblemasSonoObservacoes: z.string().max(1000).optional(),
   
   // Epworth scores
-  epworthLendo: z.number().min(0).max(3).nullable().optional(),
-  epworthTV: z.number().min(0).max(3).nullable().optional(),
-  epworthPublico: z.number().min(0).max(3).nullable().optional(),
-  epworthTransporte: z.number().min(0).max(3).nullable().optional(),
-  epworthDescansando: z.number().min(0).max(3).nullable().optional(),
-  epworthConversando: z.number().min(0).max(3).nullable().optional(),
-  epworthAposRefeicao: z.number().min(0).max(3).nullable().optional(),
-  epworthDirigindo: z.number().min(0).max(3).nullable().optional(),
-  epworthTotal: z.number().min(0).max(24).nullable().optional(),
+  epworthLendo: z.number().nullable().optional(),
+  epworthTV: z.number().nullable().optional(),
+  epworthPublico: z.number().nullable().optional(),
+  epworthTransporte: z.number().nullable().optional(),
+  epworthDescansando: z.number().nullable().optional(),
+  epworthConversando: z.number().nullable().optional(),
+  epworthAposRefeicao: z.number().nullable().optional(),
+  epworthDirigindo: z.number().nullable().optional(),
+  epworthTotal: z.number().nullable().optional(),
   
   // Cardiovascular
   pressaoAlta: z.enum(['Sim', 'Não', '']).optional(),
@@ -136,17 +134,17 @@ export const medicalFormSchema = z.object({
   
   // Hábitos Pessoais
   fumaAtualmente: z.enum(['Sim', 'Não', '']).optional(),
-  idadeComecouFumar: z.number().min(0).max(150).nullable().optional(),
+  idadeComecouFumar: z.number().nullable().optional(),
   tipoFumo: z.string().max(100).optional(),
-  idadeInicioFumo: z.number().min(0).max(150).nullable().optional(),
-  idadeCessouFumo: z.number().min(0).max(150).nullable().optional(),
+  idadeInicioFumo: z.number().nullable().optional(),
+  idadeCessouFumo: z.number().nullable().optional(),
   cessouRecentemente: z.enum(['Sim', 'Não', '']).optional(),
   jaFumou: z.enum(['Sim', 'Não', '']).optional(),
-  idadeComecouFumarEx: z.number().min(0).max(150).nullable().optional(),
-  idadeParouFumar: z.number().min(0).max(150).nullable().optional(),
-  cigarrosPorDia: z.number().min(0).max(200).nullable().optional(),
-  cigarrosPorDiaEx: z.number().min(0).max(200).nullable().optional(),
-  cargaTabagica: z.number().min(0).nullable().optional(),
+  idadeComecouFumarEx: z.number().nullable().optional(),
+  idadeParouFumar: z.number().nullable().optional(),
+  cigarrosPorDia: z.number().nullable().optional(),
+  cigarrosPorDiaEx: z.number().nullable().optional(),
+  cargaTabagica: z.number().nullable().optional(),
   tabagismoPassivo: z.enum(['Sim', 'Não', '']).optional(),
   tabagismoPassivoDetalhes: z.string().max(500).optional(),
   
