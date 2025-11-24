@@ -33,21 +33,34 @@ export default function ContinuousMedicalForm() {
   const handleSubmit = async () => {
     setIsSubmitting(true);
     try {
+      console.log('=== Iniciando envio do formulário ===');
+      console.log('Dados do formulário:', formData);
+      
       // Temporariamente sem validação Zod (incluindo números) para evitar erros de ano
       const validatedData = formData;
       
-      const {
-        data: insertedData,
-        error
-      } = await supabase.from('medical_forms').insert([{
+      console.log('Preparando insert no Supabase...');
+      const insertData = {
         nome_completo: validatedData.nomeCompleto,
         data_nascimento: validatedData.dataNascimento,
         idade: validatedData.idade,
         indicacao: validatedData.indicacao || null,
         quem_indicou: validatedData.quemIndicou || null,
         form_data: validatedData as any
-      }]).select();
-      if (error) throw error;
+      };
+      console.log('Dados do insert:', insertData);
+      
+      const {
+        data: insertedData,
+        error
+      } = await supabase.from('medical_forms').insert([insertData]).select();
+      
+      console.log('Resultado do insert:', { insertedData, error });
+      
+      if (error) {
+        console.error('Erro no insert do Supabase:', error);
+        throw error;
+      }
       toast.success('Formulário enviado com sucesso! Gerando email...');
 
       // Send email with form data
@@ -70,8 +83,21 @@ export default function ContinuousMedicalForm() {
         }
       }
     } catch (error) {
-      console.error('Erro ao enviar formulário:', error);
-      toast.error('Erro ao enviar formulário. Tente novamente.');
+      console.error('=== ERRO NO ENVIO DO FORMULÁRIO ===');
+      console.error('Tipo do erro:', typeof error);
+      console.error('Erro completo:', error);
+      console.error('Stack trace:', error instanceof Error ? error.stack : 'N/A');
+      
+      // Log detalhado de erros conhecidos
+      if (error && typeof error === 'object') {
+        console.error('Propriedades do erro:', Object.keys(error));
+        console.error('Mensagem:', (error as any).message);
+        console.error('Code:', (error as any).code);
+        console.error('Details:', (error as any).details);
+        console.error('Hint:', (error as any).hint);
+      }
+      
+      toast.error(`Erro ao enviar formulário: ${error instanceof Error ? error.message : JSON.stringify(error)}`);
     } finally {
       setIsSubmitting(false);
     }
