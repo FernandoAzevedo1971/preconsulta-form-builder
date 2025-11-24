@@ -88,7 +88,7 @@ export const IdentificationSection: React.FC<IdentificationSectionProps> = ({
                     mode="single"
                     selected={formData.dataNascimento ? new Date(formData.dataNascimento) : undefined}
                     onSelect={(date) => handleDateChange(date, 'dataNascimento')}
-                    disabled={(date) => date > new Date() || date < new Date("1900-01-01")}
+                    disabled={(date) => date > new Date()}
                     initialFocus
                     className="pointer-events-auto"
                   />
