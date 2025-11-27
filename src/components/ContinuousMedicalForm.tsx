@@ -318,10 +318,30 @@ export default function ContinuousMedicalForm() {
                     <Label htmlFor="dataNascimento" className="text-sm font-medium">
                       Data de Nascimento <span className="text-red-500">*</span>
                     </Label>
-                    <Input id="dataNascimento" type="date" value={formData.dataNascimento} onChange={e => {
-                    updateField('dataNascimento', e.target.value);
-                    updateField('idade', calculateAge(e.target.value));
-                  }} className="mt-1" />
+                    <Input 
+                      id="dataNascimento" 
+                      type="tel"
+                      inputMode="numeric"
+                      placeholder="DD/MM/AAAA"
+                      maxLength={10}
+                      value={formData.dataNascimento} 
+                      onChange={e => {
+                        let value = e.target.value.replace(/\D/g, '');
+                        if (value.length >= 2) {
+                          value = value.slice(0, 2) + '/' + value.slice(2);
+                        }
+                        if (value.length >= 5) {
+                          value = value.slice(0, 5) + '/' + value.slice(5, 9);
+                        }
+                        updateField('dataNascimento', value);
+                        if (value.length === 10) {
+                          const [day, month, year] = value.split('/');
+                          const isoDate = `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
+                          updateField('idade', calculateAge(isoDate));
+                        }
+                      }} 
+                      className="mt-1" 
+                    />
                   </div>
 
                   <div>
