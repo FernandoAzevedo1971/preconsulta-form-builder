@@ -33,70 +33,46 @@ export default function ContinuousMedicalForm() {
   const handleSubmit = async () => {
     setIsSubmitting(true);
     try {
-      console.log('=== Iniciando envio do formulário ===');
-      console.log('Dados do formulário:', formData);
+      // Gerar UUID no frontend para evitar necessidade de SELECT após INSERT
+      const formId = crypto.randomUUID();
       
-      // Temporariamente sem validação Zod (incluindo números) para evitar erros de ano
-      const validatedData = formData;
-      
-      console.log('Preparando insert no Supabase...');
       const insertData = {
-        nome_completo: validatedData.nomeCompleto,
-        data_nascimento: validatedData.dataNascimento,
-        idade: validatedData.idade,
-        indicacao: validatedData.indicacao || null,
-        quem_indicou: validatedData.quemIndicou || null,
-        form_data: validatedData as any
+        id: formId,
+        nome_completo: formData.nomeCompleto,
+        data_nascimento: formData.dataNascimento,
+        idade: formData.idade,
+        indicacao: formData.indicacao || null,
+        quem_indicou: formData.quemIndicou || null,
+        form_data: formData as any
       };
-      console.log('Dados do insert:', insertData);
       
-      const {
-        data: insertedData,
-        error
-      } = await supabase.from('medical_forms').insert([insertData]).select();
-      
-      console.log('Resultado do insert:', { insertedData, error });
+      // INSERT sem .select() - não precisa de permissão SELECT
+      const { error } = await supabase.from('medical_forms').insert([insertData]);
       
       if (error) {
         console.error('Erro no insert do Supabase:', error);
         throw error;
       }
+      
       toast.success('Formulário enviado com sucesso! Gerando email...');
 
-      // Send email with form data
-      if (insertedData && insertedData[0]) {
-        try {
-          const pdfResponse = await supabase.functions.invoke('send-medical-form-pdf', {
-            body: {
-              formId: insertedData[0].id
-            }
-          });
-          if (pdfResponse.error) {
-            console.error('Error sending email:', pdfResponse.error);
-            toast.error('Formulário salvo, mas erro ao enviar email.');
-          } else {
-            toast.success('Formulário enviado e email enviado para fazevedopneumosono@gmail.com!');
-          }
-        } catch (emailError) {
-          console.error('Error calling email function:', emailError);
+      // Enviar email usando o formId que já temos
+      try {
+        const pdfResponse = await supabase.functions.invoke('send-medical-form-pdf', {
+          body: { formId }
+        });
+        if (pdfResponse.error) {
+          console.error('Error sending email:', pdfResponse.error);
           toast.error('Formulário salvo, mas erro ao enviar email.');
+        } else {
+          toast.success('Formulário enviado e email enviado para fazevedopneumosono@gmail.com!');
         }
+      } catch (emailError) {
+        console.error('Error calling email function:', emailError);
+        toast.error('Formulário salvo, mas erro ao enviar email.');
       }
     } catch (error) {
-      console.error('=== ERRO NO ENVIO DO FORMULÁRIO ===');
-      console.error('Tipo do erro:', typeof error);
-      console.error('Erro completo:', error);
-      console.error('Stack trace:', error instanceof Error ? error.stack : 'N/A');
-      
-      // Log detalhado de erros conhecidos
-      if (error && typeof error === 'object') {
-        console.error('Propriedades do erro:', Object.keys(error));
-        console.error('Mensagem:', (error as any).message);
-        console.error('Code:', (error as any).code);
-        console.error('Details:', (error as any).details);
-        console.error('Hint:', (error as any).hint);
-      }
-      
+      console.error('Erro no envio:', error);
       toast.error(`Erro ao enviar formulário: ${error instanceof Error ? error.message : JSON.stringify(error)}`);
     } finally {
       setIsSubmitting(false);
