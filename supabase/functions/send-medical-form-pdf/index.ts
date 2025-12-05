@@ -227,7 +227,7 @@ const handler = async (req: Request): Promise<Response> => {
 
     const emailData = {
       from: "Formulário Médico <onboarding@resend.dev>",
-      to: ["drfernandoazevedoconsultorio@gmail.com"],
+      to: ["fazevedopneumosono@gmail.com"],
       subject: `Novo Formulário Médico - ${formData.nome_completo}`,
       html: `
         <h2>Novo Formulário Médico Recebido</h2>
